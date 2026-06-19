@@ -2,8 +2,15 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Meta Theme Color untuk PWA (Progressive Web App) -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sistem Arsip Cricket DKI Jakarta</title>
+    
+    <!-- Ikon Apple Touch untuk PWA di iOS -->
+    <link rel="apple-touch-icon" href="https://d13ir53smqqeyp.cloudfront.net/flags/cr-flags/FC-DKJ@2x.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,13 +29,13 @@
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        title: ['"Plus Jakarta Sans"', 'sans-serif'], // Override font-title lama
+                        title: ['"Plus Jakarta Sans"', 'sans-serif'],
                     },
                     colors: {
                         brand: {
                             50: '#fff7ed',
                             100: '#ffedd5',
-                            500: '#f97316', // Orange Pro Max
+                            500: '#f97316',
                             600: '#ea580c',
                         }
                     }
@@ -41,18 +48,18 @@
         /* TEMA PRO MAX SAAS */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc; /* Slate 50 - Sangat bersih */
-            color: #0f172a; /* Slate 900 */
+            background-color: #f8fafc;
+            color: #0f172a;
+            -webkit-tap-highlight-color: transparent; /* Optimasi PWA Mobile */
         }
 
-        /* Styling Input Modern */
         .vintage-input {
             width: 100%;
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
             color: #0f172a;
             padding: 0.75rem 1rem;
-            font-size: 16px; /* Diubah menjadi 16px untuk mencegah Auto-Zoom otomatis pada iOS/iPhone/iPad */
+            font-size: 16px;
             line-height: 1.25rem;
             border-radius: 0.75rem;
             transition: all 0.2s ease-in-out;
@@ -65,11 +72,9 @@
             box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
         }
         
-        /* Fix Calendar Icon Color */
         ::-webkit-calendar-picker-indicator { filter: none; opacity: 0.5; cursor: pointer; }
         ::-webkit-calendar-picker-indicator:hover { opacity: 0.8; }
 
-        /* Styling Tombol Modern */
         .vintage-btn {
             background-color: #ffffff;
             color: #334155;
@@ -93,14 +98,12 @@
             box-shadow: none;
         }
 
-        /* WAJIB: Mempertahankan JS behavior untuk class ini */
         .vintage-btn-active {
-            background-color: #1e293b !important; /* Slate 800 */
+            background-color: #1e293b !important;
             color: #ffffff !important;
             border-color: #1e293b !important;
         }
 
-        /* Styling Panel (Card Pro Max) */
         .vintage-panel {
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
@@ -110,7 +113,6 @@
             overflow: hidden;
         }
 
-        /* Styling Tabel Modern */
         .ledger-table { border-collapse: separate; border-spacing: 0; }
         .ledger-table th {
             background-color: #f8fafc;
@@ -132,26 +134,23 @@
         }
         .ledger-table tbody tr:hover td { background-color: #f8fafc; }
 
-        /* Overlay Modal Modern */
         .modal-overlay {
             background-color: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(8px);
         }
 
-        /* Custom Scrollbar Premium */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Utility Animasi */
         .animate-fade { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen relative antialiased selection:bg-brand-100 selection:text-brand-600">
 
-    <!-- TOAST NOTIFICATION (DIpertahankan JS-nya, Styling di-modernkan) -->
+    <!-- TOAST NOTIFICATION -->
     <div id="toast-notification" class="fixed top-6 left-1/2 transform -translate-x-1/2 text-white px-6 py-4 rounded-2xl shadow-xl z-[60] hidden flex-col items-center text-center border border-white/20 w-[90%] md:w-auto transition-all duration-300 backdrop-blur-md">
         <span id="toast-title" class="font-bold text-sm md:text-base mb-1 tracking-wide">Berhasil!</span>
         <span id="toast-message" class="text-xs md:text-sm opacity-90">Data berhasil disimpan.</span>
@@ -163,10 +162,8 @@
         <span id="sync-text" class="text-xs font-semibold text-slate-600">Cek Koneksi...</span>
     </div>
 
-    <!-- HALAMAN LOGIN (DIPERBARUI DENGAN BACKGROUND LAPANGAN) -->
+    <!-- HALAMAN LOGIN -->
     <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 sm:p-8 relative bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2505&auto=format&fit=crop');">
-        
-        <!-- Overlay gelap dan blur agar panel login tetap terbaca -->
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-0"></div>
 
         <div class="vintage-panel p-6 sm:p-8 md:p-12 max-w-md w-full text-center border-t-4 border-t-brand-500 relative z-10 shadow-2xl mx-auto">
@@ -234,7 +231,7 @@
             <form id="form-atlet" onsubmit="simpanAtlet(event)">
                 <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
                     
-                    <!-- Upload Foto Area (Modern Dropzone) -->
+                    <!-- Upload Foto Area -->
                     <div class="w-full md:w-1/3 flex flex-col items-center">
                         <label class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 w-full text-left">Foto Profil Atlet</label>
                         <div class="w-full border-2 border-dashed border-slate-300 rounded-2xl p-6 bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col items-center justify-center text-center cursor-pointer relative group">
@@ -364,7 +361,7 @@
                             <div class="space-y-4">
                                 <div class="flex flex-col">
                                     <div class="flex justify-between mb-1">
-                                        <label class="text-[11px] font-bold text-slate-600">Akurasi Bowling (Maks 24 Lemparan)</label>
+                                        <label class="text-[11px] font-bold text-slate-600">Akurasi Bowling (Maks 24)</label>
                                         <span id="disp_akurasi_awal" class="text-[11px] font-bold text-brand-600">0%</span>
                                     </div>
                                     <input type="number" id="akurat_awal" oninput="hitungSkill('awal')" required class="vintage-input" placeholder="Lemparan akurat...">
@@ -405,7 +402,7 @@
 
                         <div class="flex flex-col">
                             <label class="text-xs font-bold text-slate-600 mb-1.5">Catatan Kualitatif (Awal)</label>
-                            <textarea id="catatan_awal" rows="2" class="vintage-input resize-none text-sm" placeholder="Tuliskan evaluasi subjektif dari tim pelatih/litbang..."></textarea>
+                            <textarea id="catatan_awal" rows="2" class="vintage-input resize-none text-sm" placeholder="Tuliskan evaluasi subjektif dari tim..."></textarea>
                         </div>
                     </div>
 
@@ -438,7 +435,7 @@
                             <div class="space-y-4">
                                 <div class="flex flex-col">
                                     <div class="flex justify-between mb-1">
-                                        <label class="text-[11px] font-bold text-slate-600">Akurasi Bowling (Maks 24 Lemparan)</label>
+                                        <label class="text-[11px] font-bold text-slate-600">Akurasi Bowling (Maks 24)</label>
                                         <span id="disp_akurasi_akhir" class="text-[11px] font-bold text-brand-600">0%</span>
                                     </div>
                                     <input type="number" id="akurat_akhir" oninput="hitungSkill('akhir')" class="vintage-input" placeholder="Lemparan akurat...">
@@ -486,7 +483,7 @@
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p class="text-xs text-slate-400 font-medium">🛡️ Data akan tersimpan secara otomatis & terenkripsi ke Cloud Base.</p>
+                    <p class="text-xs text-slate-400 font-medium">🛡️ Data akan tersimpan & terenkripsi ke Cloud Base.</p>
                     <button type="submit" id="btn-submit-performa" class="vintage-btn px-8 py-3 bg-slate-900 text-white border-transparent hover:bg-slate-800 shadow-md w-full sm:w-auto text-sm">Simpan Rekam Performa</button>
                 </div>
             </form>
@@ -532,7 +529,7 @@
             </div>
             
             <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-100">
-                <p class="text-xs text-slate-400 text-center sm:text-left">Sistem manajemen tersinkronisasi dengan Google Sheets API.</p>
+                <p class="text-xs text-slate-400 text-center sm:text-left">Sistem terhubung dengan Cloud Storage. (Data foto besar tidak disimpan di memori lokal ponsel Anda).</p>
                 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <button onclick="tarikDataDariCloud()" class="vintage-btn px-4 py-2.5 text-xs font-semibold text-blue-600 bg-blue-50 border-blue-100 hover:bg-blue-100 hover:border-blue-200 transition-colors w-full sm:w-auto">Tarik Data Cloud</button>
                     <button onclick="hapusSemuaData()" class="vintage-btn px-4 py-2.5 text-xs font-semibold text-red-600 bg-red-50 border-red-100 hover:bg-red-100 hover:border-red-200 transition-colors w-full sm:w-auto">Reset Arsip Lokal</button>
@@ -592,6 +589,39 @@
 
     <script>
         // =========================================================================
+        // IMPLEMENTASI DYNAMIC PWA (Agar tetap 1 file tapi bisa diinstal di Home Screen)
+        // =========================================================================
+        (function initPWA() {
+            const manifest = {
+                "name": "Arsip Cricket DKI",
+                "short_name": "Cricket DKI",
+                "start_url": ".",
+                "display": "standalone",
+                "background_color": "#f8fafc",
+                "theme_color": "#0f172a",
+                "icons": [{
+                    "src": "https://d13ir53smqqeyp.cloudfront.net/flags/cr-flags/FC-DKJ@2x.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }]
+            };
+            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+            const manifestUrl = URL.createObjectURL(manifestBlob);
+            document.head.insertAdjacentHTML('beforeend', `<link rel="manifest" href="${manifestUrl}">`);
+
+            const swCode = `
+                self.addEventListener('install', (e) => { self.skipWaiting(); });
+                self.addEventListener('fetch', (e) => { }); // Minimal bypass agar diakui sebagai PWA installable
+            `;
+            const swBlob = new Blob([swCode], {type: 'application/javascript'});
+            const swUrl = URL.createObjectURL(swBlob);
+            
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register(swUrl).catch(console.error);
+            }
+        })();
+
+        // =========================================================================
         // URL SPREADSHEET (GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA YANG BARU)
         // =========================================================================
         const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF9aE9WVfN_t1l0tMNlW6YYxysvkOzNhwof7Ol0eLGlq6CcFsPoPCL2SFZDgtrBGyVrw/exec";
@@ -602,7 +632,7 @@
         let peranDipilihSebelumnya = ''; 
         let fotoBase64Sementara = ''; 
         let atletAktifId = ''; 
-        let syncInterval = null; // Variabel interval sinkronisasi
+        let syncInterval = null; 
 
         // --- SISTEM TOAST NOTIFICATION ---
         function showToast(title, message, isError = false) {
@@ -616,7 +646,6 @@
             toastTitle.innerText = title;
             toastMessage.innerText = message;
 
-            // Hilangkan notifikasi setelah 5 detik
             setTimeout(() => {
                 toast.classList.add('hidden');
                 toast.classList.remove('flex');
@@ -626,26 +655,14 @@
         function getValSafe(id) { const el = document.getElementById(id); return el ? el.value : ''; }
         function setValSafe(id, val) { const el = document.getElementById(id); if (el) el.value = val; }
 
-        // --- HELPER: KONVERSI LINK GOOGLE DRIVE KE DIRECT IMAGE ---
         function dapatkanUrlFotoValid(urlAsli) {
             if (!urlAsli) return '';
             let url = urlAsli.trim();
-            
-            // Jika sudah berbentuk base64 atau direct link image lain, biarkan saja
             if (url.startsWith('data:image')) return url;
-
-            // Regex untuk mengambil ID unik file dari berbagai jenis link sharing Google Drive
             const driveRegex = /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|docs\.google\.com\/(?:uc\?id=|file\/d\/))([a-zA-Z0-9_-]+)/;
             const match = url.match(driveRegex);
-            
-            if (match && match[1]) {
-                const idFile = match[1];
-                // Menggunakan endpoint "thumbnail" G-Drive yang lebih stabil dari "uc?export"
-                // sz=w800 memastikan gambar dirender cukup besar namun tidak memberatkan
-                return `https://drive.google.com/thumbnail?id=${idFile}&sz=w800`;
-            }
-
-            return url; // Kembalikan url aslinya jika bukan link Google Drive (misal link imgur)
+            if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
+            return url;
         }
 
         // --- SISTEM LOGIN ---
@@ -688,33 +705,21 @@
                 document.getElementById('nav-litbang').classList.remove('hidden');
                 bukaTab('tab-dashboard');
 
-                // Memulai fitur polling sinkronisasi real-time
                 cekSinkronisasi();
-                syncInterval = setInterval(cekSinkronisasi, 5 * 60 * 1000); // Mengecek setiap 5 menit
+                syncInterval = setInterval(cekSinkronisasi, 5 * 60 * 1000); 
             }
         }
 
         function keluarSistem() {
             if (confirm("Apakah Anda yakin ingin LOG OUT dan kembali ke halaman awal?")) {
-                // Perbaikan Google Sites: Tidak menggunakan window.location.reload() karena diblokir iframe
-                // Mengembalikan tampilan ke menu login secara manual (Single Page Application Behavior)
-                
                 document.getElementById('main-app').classList.add('hidden');
                 document.getElementById('login-screen').classList.remove('hidden');
-                
-                batalPilihPeran(); // Reset form password ke tampilan awal
-                
-                // Matikan sinkronisasi interval jika sedang berjalan
-                if (syncInterval) {
-                    clearInterval(syncInterval);
-                    syncInterval = null;
-                }
-                
+                batalPilihPeran(); 
+                if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
                 document.getElementById('sync-indicator').classList.add('hidden');
                 document.getElementById('sync-indicator').classList.remove('flex');
-                
-                roleAktif = ''; // Bersihkan sesi lokal
-                window.scrollTo(0, 0); // Gulir kembali ke atas untuk HP
+                roleAktif = ''; 
+                window.scrollTo(0, 0); 
             }
         }
 
@@ -749,14 +754,11 @@
                             dot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-sm";
                             txt.innerText = "Data Beda! (Tarik)";
                         }
-                    } else {
-                        throw new Error('Status bukan sukses');
-                    }
+                    } else { throw new Error('Status bukan sukses'); }
                 })
                 .catch(error => {
                     dot.className = "w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm";
                     txt.innerText = "Gagal Konek";
-                    console.error("Sync Error:", error);
                 });
         }
 
@@ -790,7 +792,7 @@
                     canvas.height = img.height * scaleSize;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    fotoBase64Sementara = canvas.toDataURL('image/jpeg', 0.7); // Format JPEG
+                    fotoBase64Sementara = canvas.toDataURL('image/jpeg', 0.7); 
                     
                     const preview = document.getElementById('preview-foto');
                     preview.src = fotoBase64Sementara;
@@ -827,36 +829,35 @@
                 tangan: getValSafe('tangan')
             };
 
+            // Simpan sementara agar aplikasi terasa cepat
             dbAtlet.push(atletBaru);
             localStorage.setItem('kriket_atlet_dki_v2', JSON.stringify(dbAtlet));
             
             if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL.includes("script.google.com")) {
                 const formData = new FormData();
                 formData.append('jenis_data', 'atlet');
-                formData.append('id', atletBaru.id);
-                formData.append('nama', atletBaru.nama);
-                formData.append('klub', atletBaru.klub);
-                formData.append('kabkota', atletBaru.kabkota);
-                formData.append('tgllahir', atletBaru.tgllahir);
-                formData.append('gender', atletBaru.gender);
-                formData.append('tinggi', atletBaru.tinggi);
-                formData.append('berat', atletBaru.berat);
-                formData.append('spesialisasi', atletBaru.spesialisasi);
-                formData.append('tangan', atletBaru.tangan);
-                
-                if (fotoBase64Sementara !== '') {
-                    formData.append('fotoBase64', fotoBase64Sementara);
+                for (let key in atletBaru) { 
+                    // Maps variable to proper format for form data
+                    formData.append(key, key === 'foto' ? fotoBase64Sementara : atletBaru[key]); 
                 }
                 
-                fetch(GOOGLE_SHEETS_URL, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors' 
-                }).then(() => {
-                    selesaiSimpanAtlet(btn, atletBaru.nama, idBaru);
+                // MENGHILANGKAN mode: 'no-cors' agar try-catch di Backend terbaca
+                fetch(GOOGLE_SHEETS_URL, { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then((data) => {
+                    if(data.status === 'sukses') {
+                        // Jika berhasil, panggil sukses
+                        selesaiSimpanAtlet(btn, atletBaru.nama, idBaru);
+                    } else {
+                        // Jika server merespon error
+                        showToast('Error Cloud', data.pesan || "Terjadi kesalahan di server.", true);
+                        btn.innerText = "Simpan & Kirim ke Litbang";
+                        btn.disabled = false;
+                    }
                 }).catch(err => {
-                    console.error('Error:', err);
-                    selesaiSimpanAtlet(btn, atletBaru.nama, idBaru);
+                    console.error('Error Network:', err);
+                    showToast('Koneksi Lemah', 'Disimpan secara lokal. Gagal sinkron ke Cloud.', true);
+                    selesaiSimpanAtlet(btn, atletBaru.nama, idBaru); // Tetap di-resolve lokal
                 });
             } else {
                 selesaiSimpanAtlet(btn, atletBaru.nama, idBaru);
@@ -935,8 +936,7 @@
                 setValSafe('stumping_akhir', performa.stumping_akhir || '');
                 setValSafe('catatan_akhir', performa.catatan_akhir || '');
                 
-                hitungSkill('awal');
-                hitungSkill('akhir');
+                hitungSkill('awal'); hitungSkill('akhir');
             } else {
                 document.getElementById('form-performa').reset();
                 document.getElementById('pilih-atlet').value = idAtlet;
@@ -944,7 +944,6 @@
             }
         }
 
-        // --- SIMPAN SELURUH DATA LITBANG KE SHEETS ---
         function simpanPerforma(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-performa');
@@ -978,9 +977,21 @@
                 formData.append('jenis_data', 'performa');
                 for (let key in pBaru) { formData.append(key, pBaru[key]); }
                 
-                fetch(GOOGLE_SHEETS_URL, { method: 'POST', body: formData, mode: 'no-cors' })
-                .then(() => { selesaiSimpanPerforma(btn); cekSinkronisasi(); })
-                .catch(err => { console.error('Error:', err); selesaiSimpanPerforma(btn); });
+                fetch(GOOGLE_SHEETS_URL, { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(data => { 
+                    if(data.status === 'sukses'){
+                        selesaiSimpanPerforma(btn); cekSinkronisasi(); 
+                    } else {
+                        showToast('Error Cloud', data.pesan, true);
+                        btn.innerText = "Simpan Rekam Performa";
+                        btn.disabled = false;
+                    }
+                })
+                .catch(err => { 
+                    showToast('Koneksi Lemah', 'Tersimpan lokal, gagal sync server.', true);
+                    selesaiSimpanPerforma(btn); 
+                });
             } else {
                 selesaiSimpanPerforma(btn);
             }
@@ -1036,7 +1047,6 @@
 
         function getKekuatanUtama(performa) {
             if(!performa) return null;
-            
             const sr = getKalkulasi(performa.runs_akhir, performa.runs_awal, 30);
             const ak = getKalkulasi(performa.akurat_akhir, performa.akurat_awal, 24);
             const tk = getKalkulasi(performa.tangkap_akhir, performa.tangkap_awal, 20);
@@ -1061,48 +1071,43 @@
 
         function getRekomendasiSistem(performa) {
             if(!performa) return [];
-            
             const srRaw = parseFloat(performa.runs_akhir || performa.runs_awal || 0);
             const sr = (srRaw / 30) * 100;
-            
             const ak = getKalkulasi(performa.akurat_akhir, performa.akurat_awal, 24);
             const tk = getKalkulasi(performa.tangkap_akhir, performa.tangkap_awal, 20);
             const hd = getKalkulasi(performa.hadang_akhir, performa.hadang_awal, 15);
-            
             const gv = getKalkulasi(performa.glove_akhir, performa.glove_awal, 20);
             const rc = getKalkulasi(performa.reaction_akhir, performa.reaction_awal, 15);
             const st = getKalkulasi(performa.stumping_akhir, performa.stumping_awal, 10);
-
             let hasil = [];
 
             if (sr > 0) {
                 let recBat = '';
                 let katBat = sr >= 140 ? 'Sangat Bagus' : (sr >= 110 ? (sr < 140 && sr >= 120 ? 'Bagus' : 'Bagus/Fair') : (sr >= 80 ? 'Cukup' : 'Kurang'));
-                if (sr >= 140) recBat = 'Nomor 5, 6 & 7 (Finisher / All-Rounder) - Cocok sebagai Power Hitter.';
-                else if (sr >= 120 && sr < 140) recBat = 'Nomor 3 & 4 (Top/Middle Order) - Bisa menjaga kestabilan skor tim.';
-                else if (sr >= 110 && sr <= 130 && tk >= 75 && hd >= 75) recBat = 'Nomor 1 & 2 (Opening Batsmen) - Karena Catching & Stop juga baik.';
-                else recBat = 'Nomor 8 – 11 (Tailenders) - Fokus utamanya bukan memukul.';
+                if (sr >= 140) recBat = 'Nomor 5, 6 & 7 (Finisher) - Power Hitter.';
+                else if (sr >= 120 && sr < 140) recBat = 'Nomor 3 & 4 (Top Order) - Stabil menjaga skor.';
+                else if (sr >= 110 && sr <= 130 && tk >= 75 && hd >= 75) recBat = 'Nomor 1 & 2 (Opening) - Catching/Stop juga baik.';
+                else recBat = 'Nomor 8 – 11 (Tailenders).';
                 hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Strike Rate:</span> ${sr.toFixed(1)} (${katBat}) <span class="mx-1 text-slate-400">➔</span> <span class="font-medium text-blue-700">${recBat}</span></li>`);
             }
 
             if (ak > 0) {
                 let recBowl = '';
                 let katBowl = ak >= 75 ? 'Sangat Bagus' : (ak >= 60 ? 'Bagus' : (ak >= 45 ? 'Cukup' : 'Kurang'));
-                if (ak >= 75) recBowl = 'Pelempar 1 & 2 (Opening) ATAU Pelempar 5 & 6 jika menguasai Yorker.';
-                else if (ak >= 60 && ak < 75) recBowl = 'Pelempar 3 & 4 (First Change) - Untuk membatasi skor lawan.';
-                else recBowl = 'Tidak disarankan menjadi Bowler Utama saat ini.';
+                if (ak >= 75) recBowl = 'Pelempar 1 & 2 (Opening) ATAU Pelempar 5 & 6 (Death overs).';
+                else if (ak >= 60 && ak < 75) recBowl = 'Pelempar 3 & 4 (First Change).';
+                else recBowl = 'Tidak disarankan menjadi Bowler Utama.';
                 hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Akurasi Bowling:</span> ${ak.toFixed(1)}% (${katBowl}) <span class="mx-1 text-slate-400">➔</span> <span class="font-medium text-blue-700">${recBowl}</span></li>`);
             }
 
             if (gv > 0 || rc > 0 || st > 0) {
                 let recWk = '';
-                if (gv >= 90 && rc >= 85 && st >= 80) recWk = 'Sangat Bagus ➔ WK Utama (Refleks dewa).';
-                else if (gv >= 75 && rc >= 70 && st >= 65) recWk = 'Bagus ➔ WK Cadangan / Siap Main.';
-                else if (gv >= 60 && rc >= 55 && st >= 50) recWk = 'Cukup ➔ Masih sering fumble. Butuh latihan.';
-                else recWk = 'Kurang ➔ Belum siap untuk diturunkan sebagai WK kompetitif.';
+                if (gv >= 90 && rc >= 85 && st >= 80) recWk = 'Sangat Bagus ➔ WK Utama.';
+                else if (gv >= 75 && rc >= 70 && st >= 65) recWk = 'Bagus ➔ WK Cadangan.';
+                else if (gv >= 60 && rc >= 55 && st >= 50) recWk = 'Cukup ➔ Butuh perbaikan refleks.';
+                else recWk = 'Kurang ➔ Belum siap.';
                 hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Wicket Keeping:</span> Col (${gv.toFixed(0)}%), React (${rc.toFixed(0)}%), Stump (${st.toFixed(0)}%) <span class="mx-1 text-slate-400">➔</span> <span class="font-medium text-blue-700">${recWk}</span></li>`);
             }
-
             return hasil;
         }
 
@@ -1289,6 +1294,7 @@
             }
         }
         
+        // --- OPTIMASI GAMBAR VIA SINKRONISASI ---
         function tarikDataDariCloud() {
             if (!GOOGLE_SHEETS_URL || !GOOGLE_SHEETS_URL.includes("script.google.com")) {
                 alert("URL Spreadsheet belum diatur dengan benar.");
@@ -1304,6 +1310,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "sukses") {
+                        // Data dari Cloud berisi link URL langsung ke Google Drive (bukan Base64)
+                        // Hal ini sangat menghemat limit size LocalStorage ponsel/browser
                         dbAtlet = data.atlet || [];
                         dbPerforma = data.performa || [];
                         
@@ -1328,7 +1336,6 @@
                 });
         }
 
-        // --- PDF EXPORT (PRO MAX STYLING - TIDAK MERUBAH LOGIKA DATA) ---
         function getTemplatePdf(atlet, performa, tipe = 'lengkap') {
             const thnAwal = performa.tgltes_awal ? new Date(performa.tgltes_awal).getFullYear() : '-';
             const thnAkhir = performa.tgltes_akhir ? new Date(performa.tgltes_akhir).getFullYear() : '-';
@@ -1537,25 +1544,23 @@
             const elemenPDF = document.createElement('div');
             elemenPDF.innerHTML = getTemplatePdf(atlet, performa);
 
-            // SISTEM IMAGE PRELOADER: Menunggu semua elemen <img> termuat sepenuhnya sebelum di-render
             const images = elemenPDF.querySelectorAll('img');
             const imagePromises = Array.from(images).map(img => {
                 return new Promise((resolve) => {
                     if (img.complete) return resolve();
                     img.onload = resolve;
-                    img.onerror = resolve; // Tetap lanjut meski foto rusak agar proses tidak macet total
-                    setTimeout(resolve, 5000); // Fallback: Lanjut otomatis setelah 5 detik
+                    img.onerror = resolve; 
+                    setTimeout(resolve, 5000); 
                 });
             });
 
-            // Setelah semua foto tervalidasi termuat, eksekusi pembuatan PDF
             Promise.all(imagePromises).then(() => {
                 html2pdf().set({
-                    margin:       0.3, // Margin global diperkecil agar pas 1 halaman
+                    margin:       0.3, 
                     filename:     `Laporan_Performa_${atlet.nama.replace(/\s+/g, '_')}.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 }, 
-                    html2canvas:  { scale: 2, useCORS: true, letterRendering: true }, // Skala tinggi & allow external foto
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } // Ukuran standardisasi A4
+                    html2canvas:  { scale: 2, useCORS: true, letterRendering: true }, 
+                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
                 }).from(elemenPDF).save().then(() => {
                     btnElement.innerText = teksAsli;
                     btnElement.disabled = false;
@@ -1591,7 +1596,6 @@
             const elemenPDF = document.createElement('div');
             elemenPDF.innerHTML = gabunganHTML;
 
-            // Preload Semua Foto dalam Kolektif
             const images = elemenPDF.querySelectorAll('img');
             const imagePromises = Array.from(images).map(img => {
                 return new Promise((resolve) => {
@@ -1604,11 +1608,11 @@
 
             Promise.all(imagePromises).then(() => {
                 html2pdf().set({
-                    margin:       0.3, // Margin Presisi Kiri/Kanan/Atas/Bawah
+                    margin:       0.3, 
                     filename:     tipe === 'awal_saja' ? 'Buku_Besar_Tes_Awal.pdf' : 'Buku_Besar_Tes_Lengkap.pdf',
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { scale: 2, useCORS: true, letterRendering: true }, 
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } // Standard A4
+                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } 
                 }).from(elemenPDF).save().then(() => {
                     btnElement.innerText = teksAsli;
                     btnElement.disabled = false;
