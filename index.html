@@ -503,7 +503,7 @@
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p class="text-xs text-slate-400 font-medium">🛡️ Data akan tersimpan & terenkripsi ke Cloud Base.</p>
+                    <p class="text-xs text-slate-400 font-medium">🛡️ Data dilengkapi dengan sistem Sinkronisasi Anti-Konflik.</p>
                     <button type="submit" id="btn-submit-performa" class="vintage-btn px-8 py-3 bg-slate-900 text-white border-transparent hover:bg-slate-800 shadow-md w-full sm:w-auto text-sm">Simpan Rekam Performa</button>
                 </div>
             </form>
@@ -549,7 +549,7 @@
             </div>
             
             <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-100">
-                <p class="text-xs text-slate-400 text-center sm:text-left">Sistem terhubung dengan Cloud Storage. (Data foto besar tidak disimpan di memori lokal ponsel Anda).</p>
+                <p class="text-xs text-slate-400 text-center sm:text-left">Sistem terhubung dengan Cloud Storage dengan Sinkronisasi Berbasis Waktu (Anti-Konflik).</p>
                 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <button onclick="tarikDataDariCloud()" class="vintage-btn px-4 py-2.5 text-xs font-semibold text-blue-600 bg-blue-50 border-blue-100 hover:bg-blue-100 hover:border-blue-200 transition-colors w-full sm:w-auto">Tarik Data Cloud</button>
                     <button onclick="hapusSemuaData()" class="vintage-btn px-4 py-2.5 text-xs font-semibold text-red-600 bg-red-50 border-red-100 hover:bg-red-100 hover:border-red-200 transition-colors w-full sm:w-auto">Reset Arsip Lokal</button>
@@ -675,13 +675,20 @@
         function getValSafe(id) { const el = document.getElementById(id); return el ? el.value : ''; }
         function setValSafe(id, val) { const el = document.getElementById(id); if (el) el.value = val; }
 
+        // PERBAIKAN 1: Menangani Link GDrive agar dirender langsung di Img Tag
         function dapatkanUrlFotoValid(urlAsli) {
             if (!urlAsli) return '';
             let url = urlAsli.trim();
             if (url.startsWith('data:image')) return url;
-            const driveRegex = /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|docs\.google\.com\/(?:uc\?id=|file\/d\/))([a-zA-Z0-9_-]+)/;
+            
+            // Regex diperkuat untuk menangani berbagai bentuk link Google Drive
+            const driveRegex = /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|docs\.google\.com\/(?:uc\?id=|file\/d\/)|id=)([a-zA-Z0-9_-]{25,})/;
             const match = url.match(driveRegex);
-            if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
+            
+            if (match && match[1]) {
+                // Endpoint terbaik saat ini untuk menampilkan gambar GDrive lintas platform/perangkat
+                return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+            }
             return url;
         }
 
@@ -846,7 +853,9 @@
                 tinggi: getValSafe('tinggi'),
                 berat: getValSafe('berat'),
                 spesialisasi: getValSafe('spesialisasi'),
-                tangan: getValSafe('tangan')
+                tangan: getValSafe('tangan'),
+                // PERBAIKAN 3: Timestamp untuk resolusi konflik
+                last_updated: Date.now()
             };
 
             dbAtlet.push(atletBaru);
@@ -944,31 +953,32 @@
             const p = dbPerforma.find(x => x.idAtlet === idAtlet);
             
             if(p) {
-                setValSafe('tgltes_awal', p.tgltes_awal || p.tglTes || '');
-                setValSafe('vo2_awal', p.vo2_awal || p.vo2 || '');
-                setValSafe('runtwo_awal', p.runtwo_awal || '');
-                setValSafe('sprint_awal', p.sprint_awal || p.sprint || '');
-                setValSafe('runs_awal', p.runs_awal || '');
-                setValSafe('control_awal', p.control_awal || '');
-                setValSafe('akurat_awal', p.akurat_awal || '');
-                setValSafe('tangkap_awal', p.tangkap_awal || '');
-                setValSafe('hadang_awal', p.hadang_awal || '');
-                setValSafe('wk_col_awal', p.wk_col_awal || '');
-                setValSafe('wk_stump_awal', p.wk_stump_awal || '');
-                setValSafe('catatan_awal', p.catatan_awal || p.catatan || '');
+                // PERBAIKAN 2: Fallback key data dari spreadsheet agar selalu match dengan Litbang Input
+                setValSafe('tgltes_awal', p.tgltes_awal || p.tglTes || p.tgltesawal || '');
+                setValSafe('vo2_awal', p.vo2_awal || p.vo2 || p.vo2awal || '');
+                setValSafe('runtwo_awal', p.runtwo_awal || p.runtwoawal || '');
+                setValSafe('sprint_awal', p.sprint_awal || p.sprint || p.sprintawal || '');
+                setValSafe('runs_awal', p.runs_awal || p.runsawal || '');
+                setValSafe('control_awal', p.control_awal || p.controlawal || '');
+                setValSafe('akurat_awal', p.akurat_awal || p.akuratawal || '');
+                setValSafe('tangkap_awal', p.tangkap_awal || p.tangkapawal || '');
+                setValSafe('hadang_awal', p.hadang_awal || p.hadangawal || '');
+                setValSafe('wk_col_awal', p.wk_col_awal || p.wkcolawal || '');
+                setValSafe('wk_stump_awal', p.wk_stump_awal || p.wkstumpawal || '');
+                setValSafe('catatan_awal', p.catatan_awal || p.catatanawal || p.catatan || '');
 
-                setValSafe('tgltes_akhir', p.tgltes_akhir || '');
-                setValSafe('vo2_akhir', p.vo2_akhir || '');
-                setValSafe('runtwo_akhir', p.runtwo_akhir || '');
-                setValSafe('sprint_akhir', p.sprint_akhir || '');
-                setValSafe('runs_akhir', p.runs_akhir || '');
-                setValSafe('control_akhir', p.control_akhir || '');
-                setValSafe('akurat_akhir', p.akurat_akhir || '');
-                setValSafe('tangkap_akhir', p.tangkap_akhir || '');
-                setValSafe('hadang_akhir', p.hadang_akhir || '');
-                setValSafe('wk_col_akhir', p.wk_col_akhir || '');
-                setValSafe('wk_stump_akhir', p.wk_stump_akhir || '');
-                setValSafe('catatan_akhir', p.catatan_akhir || '');
+                setValSafe('tgltes_akhir', p.tgltes_akhir || p.tgltesakhir || '');
+                setValSafe('vo2_akhir', p.vo2_akhir || p.vo2akhir || '');
+                setValSafe('runtwo_akhir', p.runtwo_akhir || p.runtwoakhir || '');
+                setValSafe('sprint_akhir', p.sprint_akhir || p.sprintakhir || '');
+                setValSafe('runs_akhir', p.runs_akhir || p.runsakhir || '');
+                setValSafe('control_akhir', p.control_akhir || p.controlakhir || '');
+                setValSafe('akurat_akhir', p.akurat_akhir || p.akuratakhir || '');
+                setValSafe('tangkap_akhir', p.tangkap_akhir || p.tangkapakhir || '');
+                setValSafe('hadang_akhir', p.hadang_akhir || p.hadangakhir || '');
+                setValSafe('wk_col_akhir', p.wk_col_akhir || p.wkcolakhir || '');
+                setValSafe('wk_stump_akhir', p.wk_stump_akhir || p.wkstumpakhir || '');
+                setValSafe('catatan_akhir', p.catatan_akhir || p.catatanakhir || '');
                 
                 hitungSkill('awal'); hitungSkill('akhir');
             } else {
@@ -999,7 +1009,9 @@
                 runs_akhir: getValSafe('runs_akhir'), control_akhir: getValSafe('control_akhir'),
                 akurat_akhir: getValSafe('akurat_akhir'), tangkap_akhir: getValSafe('tangkap_akhir'),
                 hadang_akhir: getValSafe('hadang_akhir'), wk_col_akhir: getValSafe('wk_col_akhir'),
-                wk_stump_akhir: getValSafe('wk_stump_akhir'), catatan_akhir: getValSafe('catatan_akhir')
+                wk_stump_akhir: getValSafe('wk_stump_akhir'), catatan_akhir: getValSafe('catatan_akhir'),
+                // PERBAIKAN 3: Timestamp anti-konflik
+                last_updated: Date.now()
             };
 
             dbPerforma = dbPerforma.filter(x => x.idAtlet !== pBaru.idAtlet);
@@ -1070,8 +1082,11 @@
                     const performa = dbPerforma.find(p => p.idAtlet === atlet.id) || null;
                     let statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-600">Belum Ada Tes</span>`;
                     if (performa) {
-                        if (performa.tgltes_akhir && performa.vo2_akhir) statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">Lengkap (Awal & Akhir)</span>`;
-                        else statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200">Hanya Tes Awal</span>`;
+                        // Cek dengan keys dari Apps script juga untuk kepastian indikator
+                        const isAwal = performa.tgltes_awal || performa.tgltesawal || performa.tglTes;
+                        const isAkhir = performa.tgltes_akhir || performa.tgltesakhir;
+                        if (isAkhir && (performa.vo2_akhir || performa.vo2akhir)) statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">Lengkap (Awal & Akhir)</span>`;
+                        else if (isAwal) statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200">Hanya Tes Awal</span>`;
                     }
                     
                     const tr = document.createElement('tr');
@@ -1108,15 +1123,25 @@
         function getDominasi(performa) {
             if(!performa) return null;
             
-            // ICC Base 24 & 20 Calculations
-            const sr = getKalkulasi(performa.runs_akhir, performa.runs_awal, 24);
-            const cp = getKalkulasi(performa.control_akhir, performa.control_awal, 24);
-            const ba = getKalkulasi(performa.akurat_akhir, performa.akurat_awal, 24);
-            const cr = getKalkulasi(performa.tangkap_akhir, performa.tangkap_awal, 20);
-            const fe = getKalkulasi(performa.hadang_akhir, performa.hadang_awal, 20);
+            // ICC Base 24 & 20 Calculations menggunakan fallback support keys
+            const getSafe = (keyA, keyB) => performa[keyA] || performa[keyB];
+
+            const rAkhir = getSafe('runs_akhir', 'runsakhir'); const rAwal = getSafe('runs_awal', 'runsawal');
+            const cAkhir = getSafe('control_akhir', 'controlakhir'); const cAwal = getSafe('control_awal', 'controlawal');
+            const aAkhir = getSafe('akurat_akhir', 'akuratakhir'); const aAwal = getSafe('akurat_awal', 'akuratawal');
+            const tAkhir = getSafe('tangkap_akhir', 'tangkapakhir'); const tAwal = getSafe('tangkap_awal', 'tangkapawal');
+            const hAkhir = getSafe('hadang_akhir', 'hadangakhir'); const hAwal = getSafe('hadang_awal', 'hadangawal');
+            const wkcAkhir = getSafe('wk_col_akhir', 'wkcolakhir'); const wkcAwal = getSafe('wk_col_awal', 'wkcolawal');
+            const wksAkhir = getSafe('wk_stump_akhir', 'wkstumpakhir'); const wksAwal = getSafe('wk_stump_awal', 'wkstumpawal');
+
+            const sr = getKalkulasi(rAkhir, rAwal, 24);
+            const cp = getKalkulasi(cAkhir, cAwal, 24);
+            const ba = getKalkulasi(aAkhir, aAwal, 24);
+            const cr = getKalkulasi(tAkhir, tAwal, 20);
+            const fe = getKalkulasi(hAkhir, hAwal, 20);
             
-            const wkc = getLatest(performa.wk_col_akhir, performa.wk_col_awal);
-            const wks = getLatest(performa.wk_stump_akhir, performa.wk_stump_awal);
+            const wkc = getLatest(wkcAkhir, wkcAwal);
+            const wks = getLatest(wksAkhir, wksAwal);
             const wk = ((wkc + wks) / 20) * 100;
 
             let dominasi = "";
@@ -1137,7 +1162,6 @@
                 dominasi = "Development Player"; desc = "Atlet masih dalam tahap pengembangan dasar teknik (Below Threshold).";
             }
 
-            // Return calculated variables to reuse in Placement Engine
             return { nama: dominasi, deskripsi: desc, sr, cp, ba, cr, fe, wk };
         }
 
@@ -1145,8 +1169,13 @@
         function getRekomendasiSistem(performa, dom) {
             if(!performa || !dom) return { list: [], alert: null };
             
-            const vo2 = getLatest(performa.vo2_akhir, performa.vo2_awal);
-            const run2 = getLatest(performa.runtwo_akhir, performa.runtwo_awal);
+            const getSafe = (keyA, keyB, keyC) => performa[keyA] || performa[keyB] || performa[keyC];
+            const vo2Akhir = getSafe('vo2_akhir', 'vo2akhir', null); const vo2Awal = getSafe('vo2_awal', 'vo2awal', 'vo2');
+            const run2Akhir = getSafe('runtwo_akhir', 'runtwoakhir', null); const run2Awal = getSafe('runtwo_awal', 'runtwoawal', null);
+
+            const vo2 = getLatest(vo2Akhir, vo2Awal);
+            const run2 = getLatest(run2Akhir, run2Awal);
+
             let hasil = [];
             let isBatsman = (dom.nama === "Batsman" || dom.nama === "All-Rounder" || dom.nama === "Wicket-Keeper Batsman");
             let isBowler = (dom.nama === "Bowler" || dom.nama === "All-Rounder");
@@ -1239,10 +1268,12 @@
                 const domObj = getDominasi(performa);
                 const rekomData = getRekomendasiSistem(performa, domObj);
                 
-                const c24 = (val) => val ? ((parseFloat(val)/24)*100).toFixed(1)+'%' : '-';
-                const c20 = (val) => val ? ((parseFloat(val)/20)*100).toFixed(1)+'%' : '-';
-                const cwk = (c, s) => (c || s) ? ((((parseFloat(c)||0) + (parseFloat(s)||0))/20)*100).toFixed(1)+'%' : '-';
-                const srF = (val) => val ? 'SR '+((parseFloat(val)/24)*100).toFixed(1) : '-';
+                const getSafe = (keyA, keyB, keyC) => performa[keyA] || performa[keyB] || performa[keyC] || '-';
+                
+                const c24 = (val) => (val !== '-') ? ((parseFloat(val)/24)*100).toFixed(1)+'%' : '-';
+                const c20 = (val) => (val !== '-') ? ((parseFloat(val)/20)*100).toFixed(1)+'%' : '-';
+                const cwk = (c, s) => (c !== '-' || s !== '-') ? ((((parseFloat(c)||0) + (parseFloat(s)||0))/20)*100).toFixed(1)+'%' : '-';
+                const srF = (val) => (val !== '-') ? 'SR '+((parseFloat(val)/24)*100).toFixed(1) : '-';
 
                 perfContainer.innerHTML = `
                     <div class="overflow-x-auto rounded-xl border border-slate-200">
@@ -1257,48 +1288,48 @@
                             <tbody class="text-slate-700">
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Tanggal Tes</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${performa.tgltes_awal || '-'}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${performa.tgltes_akhir || '-'}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${getSafe('tgltes_awal', 'tgltesawal', 'tglTes')}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${getSafe('tgltes_akhir', 'tgltesakhir')}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">VO2 Max (Kapasitas Paru)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${performa.vo2_awal || '-'}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${performa.vo2_akhir || '-'}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${getSafe('vo2_awal', 'vo2awal', 'vo2')}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${getSafe('vo2_akhir', 'vo2akhir')}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Run Two Time (Detik)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${performa.runtwo_awal || '-'}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${performa.runtwo_akhir || '-'}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${getSafe('runtwo_awal', 'runtwoawal')}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${getSafe('runtwo_akhir', 'runtwoakhir')}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Batting: Strike Rate (/24)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${srF(performa.runs_awal)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${srF(performa.runs_akhir)}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${srF(getSafe('runs_awal', 'runsawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${srF(getSafe('runs_akhir', 'runsakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Batting: Control Pct (/24)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c24(performa.control_awal)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c24(performa.control_akhir)}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c24(getSafe('control_awal', 'controlawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c24(getSafe('control_akhir', 'controlakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Bowling: Accuracy (/24)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c24(performa.akurat_awal)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c24(performa.akurat_akhir)}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c24(getSafe('akurat_awal', 'akuratawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c24(getSafe('akurat_akhir', 'akuratakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Catching Rate (/20)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c20(performa.tangkap_awal)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c20(performa.tangkap_akhir)}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c20(getSafe('tangkap_awal', 'tangkapawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c20(getSafe('tangkap_akhir', 'tangkapakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Fielding Efficiency (/20)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c20(performa.hadang_awal)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c20(performa.hadang_akhir)}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c20(getSafe('hadang_awal', 'hadangawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c20(getSafe('hadang_akhir', 'hadangakhir'))}</td>
                                 </tr>
                                 <tr class="hover:bg-slate-50">
                                     <td class="p-3">Wicket Keeping (/20)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${cwk(performa.wk_col_awal, performa.wk_stump_awal)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${cwk(performa.wk_col_akhir, performa.wk_stump_akhir)}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${cwk(getSafe('wk_col_awal', 'wkcolawal'), getSafe('wk_stump_awal', 'wkstumpawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${cwk(getSafe('wk_col_akhir', 'wkcolakhir'), getSafe('wk_stump_akhir', 'wkstumpakhir'))}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1307,11 +1338,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
                         <div class="bg-slate-50 p-4 border border-slate-200 rounded-xl">
                             <span class="text-slate-500 font-bold text-xs uppercase tracking-wider block mb-1.5">Catatan Litbang (Awal)</span>
-                            <p class="text-sm text-slate-700 italic m-0">${performa.catatan_awal || '-'}</p>
+                            <p class="text-sm text-slate-700 italic m-0">${getSafe('catatan_awal', 'catatanawal', 'catatan')}</p>
                         </div>
                         <div class="bg-brand-50 p-4 border border-brand-100 rounded-xl">
                             <span class="text-brand-600 font-bold text-xs uppercase tracking-wider block mb-1.5">Catatan Litbang (Akhir)</span>
-                            <p class="text-sm text-brand-800 italic m-0">${performa.catatan_akhir || '-'}</p>
+                            <p class="text-sm text-brand-800 italic m-0">${getSafe('catatan_akhir', 'catatanakhir')}</p>
                         </div>
                     </div>
                 `;
@@ -1374,6 +1405,30 @@
             }
         }
         
+        // PERBAIKAN 3: Logika penggabungan data berbasis timestamp (Anti-Overwrite/Konflik)
+        function mergeDataLocalAndCloud(localArr, cloudArr, idProperty) {
+            if (!cloudArr || !Array.isArray(cloudArr)) return localArr;
+            let merged = [...localArr];
+            
+            cloudArr.forEach(cloudItem => {
+                const localIdx = merged.findIndex(item => item[idProperty] === cloudItem[idProperty]);
+                if (localIdx === -1) {
+                    // Data baru dari cloud, langsung tambahkan
+                    merged.push(cloudItem);
+                } else {
+                    // Cek Timestamp (last_updated) jika ada konflik/update
+                    const localTime = parseInt(merged[localIdx].last_updated) || 0;
+                    const cloudTime = parseInt(cloudItem.last_updated) || 0;
+                    
+                    // Timpa data lokal hanya jika data dari Cloud lebih baru atau sama
+                    if (cloudTime >= localTime) {
+                        merged[localIdx] = cloudItem;
+                    }
+                }
+            });
+            return merged;
+        }
+
         function tarikDataDariCloud() {
             if (!GOOGLE_SHEETS_URL || !GOOGLE_SHEETS_URL.includes("script.google.com")) {
                 alert("URL Spreadsheet belum diatur dengan benar.");
@@ -1389,8 +1444,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "sukses") {
-                        dbAtlet = data.atlet || [];
-                        dbPerforma = data.performa || [];
+                        // Implementasi Merge Anti-Konflik
+                        dbAtlet = mergeDataLocalAndCloud(dbAtlet, data.atlet, 'id');
+                        dbPerforma = mergeDataLocalAndCloud(dbPerforma, data.performa, 'idAtlet');
                         
                         localStorage.setItem('kriket_atlet_dki_v2', JSON.stringify(dbAtlet));
                         localStorage.setItem('kriket_performa_dki_v2', JSON.stringify(dbPerforma));
@@ -1398,7 +1454,7 @@
                         renderBukuBesar();
                         muatDaftarAtlet();
                         cekSinkronisasi(); 
-                        showToast('Sinkronisasi Sukses', `Tarik ${dbAtlet.length} Atlet dan ${dbPerforma.length} Data Performa dari Cloud.`);
+                        showToast('Sinkronisasi Sukses', `Update selesai. Data konflik diselesaikan berdasarkan waktu simpan.`);
                     } else {
                         showToast('Gagal Tarik Data', 'Gagal memproses respons dari server.', true);
                     }
@@ -1415,8 +1471,13 @@
 
         // --- SISTEM PEMBUATAN PDF (Update Rubrik ICC) ---
         function getTemplatePdf(atlet, performa, tipe = 'lengkap') {
-            const thnAwal = performa.tgltes_awal ? new Date(performa.tgltes_awal).getFullYear() : '-';
-            const thnAkhir = performa.tgltes_akhir ? new Date(performa.tgltes_akhir).getFullYear() : '-';
+            const getSafe = (keyA, keyB, keyC) => performa[keyA] || performa[keyB] || performa[keyC];
+            
+            const rawTglAwal = getSafe('tgltes_awal', 'tgltesawal', 'tglTes');
+            const rawTglAkhir = getSafe('tgltes_akhir', 'tgltesakhir');
+            
+            const thnAwal = rawTglAwal ? new Date(rawTglAwal).getFullYear() : '-';
+            const thnAkhir = rawTglAkhir ? new Date(rawTglAkhir).getFullYear() : '-';
             const tahunTampil = thnAkhir !== '-' ? thnAkhir : thnAwal;
 
             const domObj = getDominasi(performa);
@@ -1550,48 +1611,48 @@
                             <tbody>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Tanggal Pengujian</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${performa.tgltes_awal || '-'}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${performa.tgltes_akhir || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${rawTglAwal || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${rawTglAkhir || '-'}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Kapasitas Paru (VO2 Max)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${performa.vo2_awal || '-'}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${performa.vo2_akhir || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${getSafe('vo2_awal', 'vo2awal', 'vo2') || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${getSafe('vo2_akhir', 'vo2akhir') || '-'}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Run Two Time (Detik)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${performa.runtwo_awal || '-'}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${performa.runtwo_akhir || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${getSafe('runtwo_awal', 'runtwoawal') || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${getSafe('runtwo_akhir', 'runtwoakhir') || '-'}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Batting: Strike Rate (/24)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${srF(performa.runs_awal)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${srF(performa.runs_akhir)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${srF(getSafe('runs_awal', 'runsawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${srF(getSafe('runs_akhir', 'runsakhir'))}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Batting: Control Pct (/24)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c24(performa.control_awal)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c24(performa.control_akhir)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c24(getSafe('control_awal', 'controlawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c24(getSafe('control_akhir', 'controlakhir'))}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Bowling: Accuracy (/24)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c24(performa.akurat_awal)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c24(performa.akurat_akhir)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c24(getSafe('akurat_awal', 'akuratawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c24(getSafe('akurat_akhir', 'akuratakhir'))}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Catching Rate (/20)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c20(performa.tangkap_awal)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c20(performa.tangkap_akhir)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c20(getSafe('tangkap_awal', 'tangkapawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c20(getSafe('tangkap_akhir', 'tangkapakhir'))}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Fielding Efficiency (/20)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c20(performa.hadang_awal)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c20(performa.hadang_akhir)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c20(getSafe('hadang_awal', 'hadangawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c20(getSafe('hadang_akhir', 'hadangakhir'))}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-right: 1px solid #e2e8f0; color: #64748b;">WK: Total Pct (/20)</td>
-                                    <td style="padding: 6px 10px; border-right: 1px solid #e2e8f0; text-align: center;">${cwk(performa.wk_col_awal, performa.wk_stump_awal)}</td>
-                                    <td style="padding: 6px 10px; text-align: center; font-weight: bold;">${cwk(performa.wk_col_akhir, performa.wk_stump_akhir)}</td>
+                                    <td style="padding: 6px 10px; border-right: 1px solid #e2e8f0; text-align: center;">${cwk(getSafe('wk_col_awal', 'wkcolawal'), getSafe('wk_stump_awal', 'wkstumpawal'))}</td>
+                                    <td style="padding: 6px 10px; text-align: center; font-weight: bold;">${cwk(getSafe('wk_col_akhir', 'wkcolakhir'), getSafe('wk_stump_akhir', 'wkstumpakhir'))}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1600,11 +1661,11 @@
                         <div style="display: flex; gap: 15px; margin-bottom: 15px;">
                             <div style="width: 50%; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; page-break-inside: avoid;">
                                 <strong style="color: #475569; display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase;">Evaluasi Awal:</strong>
-                                <span style="font-style: italic; font-size: 11px; color: #334155;">${performa.catatan_awal || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
+                                <span style="font-style: italic; font-size: 11px; color: #334155;">${getSafe('catatan_awal', 'catatanawal', 'catatan') || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
                             </div>
                             <div style="width: 50%; background-color: #fff7ed; border: 1px solid #ffedd5; border-radius: 6px; padding: 12px; page-break-inside: avoid;">
                                 <strong style="color: #ea580c; display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase;">Evaluasi Akhir (Kemajuan):</strong>
-                                <span style="font-style: italic; font-size: 11px; color: #334155;">${performa.catatan_akhir || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
+                                <span style="font-style: italic; font-size: 11px; color: #334155;">${getSafe('catatan_akhir', 'catatanakhir') || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
                             </div>
                         </div>
 
@@ -1657,8 +1718,9 @@
             const atletTerfilter = dbAtlet.filter(atlet => {
                 const p = dbPerforma.find(x => x.idAtlet === atlet.id);
                 if (!p) return false;
-                const adaAwal = !!p.tgltes_awal; const adaAkhir = !!p.tgltes_akhir;
-                return tipe === 'awal_saja' ? (adaAwal && !adaAkhir) : (adaAwal && adaAkhir);
+                const isAwal = p.tgltes_awal || p.tgltesawal || p.tglTes;
+                const isAkhir = p.tgltes_akhir || p.tgltesakhir;
+                return tipe === 'awal_saja' ? (isAwal && !isAkhir) : (isAwal && isAkhir);
             });
 
             if (atletTerfilter.length === 0) {
