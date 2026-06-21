@@ -644,7 +644,7 @@
         // =========================================================================
         // URL SPREADSHEET 
         // =========================================================================
-        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwgeUQQXHc4qPZMo67ie5HY94tMEJvo4UZZeHPxj6UA9yltqgDV0nV2XZAHJIULGYzYUA/exec";
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF9aE9WVfN_t1l0tMNlW6YYxysvkOzNhwof7Ol0eLGlq6CcFsPoPCL2SFZDgtrBGyVrw/exec";
 
         let dbAtlet = JSON.parse(localStorage.getItem('kriket_atlet_dki_v2')) || [];
         let dbPerforma = JSON.parse(localStorage.getItem('kriket_performa_dki_v2')) || [];
@@ -772,7 +772,13 @@
                 .then(data => {
                     if (data.status === "sukses") {
                         const localCount = dbAtlet.length + dbPerforma.length;
-                        const cloudCount = (data.atlet ? data.atlet.length : 0) + (data.performa ? data.performa.length : 0);
+                        
+                        // Menghitung id unik dari penggabungan 2 sheet di backend
+                        const perfAwal = data.performaAwal || [];
+                        const perfAkhir = data.performaAkhir || [];
+                        const allPerfIds = new Set([...perfAwal.map(p=>p.idAtlet), ...perfAkhir.map(p=>p.idAtlet)]);
+
+                        const cloudCount = (data.atlet ? data.atlet.length : 0) + allPerfIds.size;
 
                         if (localCount === cloudCount) {
                             dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm";
@@ -994,8 +1000,12 @@
             btn.innerText = "Mengirim ke Sheets...";
             btn.disabled = true;
             
+            const idAtletDipilih = document.getElementById('pilih-atlet').value;
+            const atletTerpilih = dbAtlet.find(a => a.id === idAtletDipilih);
+            
             const pBaru = {
-                idAtlet: document.getElementById('pilih-atlet').value,
+                idAtlet: idAtletDipilih,
+                nama: atletTerpilih ? atletTerpilih.nama : '', // Menambahkan nama atlet
                 
                 tgltes_awal: getValSafe('tgltes_awal'), vo2_awal: getValSafe('vo2_awal'),
                 runtwo_awal: getValSafe('runtwo_awal'), sprint_awal: getValSafe('sprint_awal'),
@@ -1245,7 +1255,8 @@
             noImgEl.classList.remove('hidden');
             noImgEl.innerText = "Memuat foto...";
 
-            const urlFotoBersih = dapatkanUrlFotoValid(atlet.foto);
+            // Fallback key untuk mengantisipasi perubahan header di Sheets (Foto, FOTO, foto)
+            const urlFotoBersih = dapatkanUrlFotoValid(atlet.foto || atlet.Foto || atlet.FOTO);
 
             if (urlFotoBersih && urlFotoBersih.length > 20) { 
                 imgEl.onload = function() {
@@ -1444,9 +1455,23 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "sukses") {
-                        // Implementasi Merge Anti-Konflik
+                        // Implementasi Merge Anti-Konflik untuk Data Atlet
                         dbAtlet = mergeDataLocalAndCloud(dbAtlet, data.atlet, 'id');
-                        dbPerforma = mergeDataLocalAndCloud(dbPerforma, data.performa, 'idAtlet');
+                        
+                        // Menyatukan Performa Awal & Akhir dari Sheets untuk Data Lokal UI
+                        let combinedPerformaFromCloud = [];
+                        const perfAwal = data.performaAwal || [];
+                        const perfAkhir = data.performaAkhir || [];
+
+                        const allPerfIds = new Set([...perfAwal.map(p=>p.idAtlet), ...perfAkhir.map(p=>p.idAtlet)]);
+                        allPerfIds.forEach(id => {
+                            if (!id) return;
+                            let aw = perfAwal.find(p => p.idAtlet === id) || {};
+                            let ak = perfAkhir.find(p => p.idAtlet === id) || {};
+                            combinedPerformaFromCloud.push({ ...aw, ...ak, idAtlet: id });
+                        });
+
+                        dbPerforma = mergeDataLocalAndCloud(dbPerforma, combinedPerformaFromCloud, 'idAtlet');
                         
                         localStorage.setItem('kriket_atlet_dki_v2', JSON.stringify(dbAtlet));
                         localStorage.setItem('kriket_performa_dki_v2', JSON.stringify(dbPerforma));
@@ -1454,7 +1479,7 @@
                         renderBukuBesar();
                         muatDaftarAtlet();
                         cekSinkronisasi(); 
-                        showToast('Sinkronisasi Sukses', `Update selesai. Data konflik diselesaikan berdasarkan waktu simpan.`);
+                        showToast('Sinkronisasi Sukses', `Update selesai. Data diselesaikan berdasarkan waktu simpan terakhir.`);
                     } else {
                         showToast('Gagal Tarik Data', 'Gagal memproses respons dari server.', true);
                     }
