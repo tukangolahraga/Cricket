@@ -329,8 +329,9 @@
             </div>
 
             <!-- Pesan Informasi Pengisian Berbeda Waktu -->
-            <div id="info-pengisian" class="hidden mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-xl text-sm">
-                <span class="font-bold">Info:</span> Data Evaluasi Awal sudah tersimpan. Anda dapat langsung melengkapi Evaluasi Akhir. Data sebelumnya tidak akan terhapus.
+            <div id="info-pengisian" class="hidden mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-xl text-sm flex items-start gap-3">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span><span class="font-bold">Kunci Tes Akhir Terbuka:</span> Data Evaluasi Awal untuk atlet ini sudah tersimpan di database. Anda sekarang dapat mengisi dan melengkapi kolom Evaluasi Akhir.</span>
             </div>
 
             <form id="form-performa" onsubmit="simpanPerforma(event)">
@@ -421,8 +422,17 @@
                         </div>
                     </div>
 
-                    <!-- BLOK TES AKHIR -->
-                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+                    <!-- BLOK TES AKHIR (TERKUNCI) -->
+                    <div id="blok-tes-akhir-locked" class="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center text-center h-full min-h-[400px]">
+                        <div class="w-16 h-16 bg-slate-200 text-slate-400 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-700">Tes Akhir Terkunci</h3>
+                        <p class="text-sm text-slate-500 mt-2 max-w-xs">Pilih atlet dan simpan data Evaluasi Awal terlebih dahulu untuk membuka form Evaluasi Akhir.</p>
+                    </div>
+
+                    <!-- BLOK TES AKHIR (TERBUKA) -->
+                    <div id="blok-tes-akhir" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden hidden">
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-brand-500"></div>
                         <h3 class="text-lg font-bold text-slate-800 mb-6 pl-2">II. Evaluasi Post-Season (Akhir)</h3>
                         
@@ -508,7 +518,7 @@
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p class="text-xs text-slate-400 font-medium">🛡️ Penggabungan Cerdas: Anda bisa mengisi Tes Awal dulu, lalu Tes Akhir di lain hari.</p>
+                    <p class="text-xs text-slate-400 font-medium"></p>
                     <button type="submit" id="btn-submit-performa" class="vintage-btn px-8 py-3 bg-slate-900 text-white border-transparent hover:bg-slate-800 shadow-md w-full sm:w-auto text-sm">Simpan Rekam Performa</button>
                 </div>
             </form>
@@ -915,9 +925,10 @@
                 opsi.textContent = `[${atlet.id}] - ${atlet.nama} (${atlet.klub})`;
                 selekta.appendChild(opsi);
             });
-            document.getElementById('form-performa').reset();
-            document.getElementById('info-pengisian').classList.add('hidden');
-            hitungSkill('awal'); hitungSkill('akhir');
+            
+            // Set ke default kosong agar memicu reseting tampilan
+            document.getElementById('pilih-atlet').value = "";
+            muatDataPerformaAtlet(); 
         }
 
         // --- SISTEM KALKULASI PERSENTASE ICC LEVEL 2 ---
@@ -951,10 +962,14 @@
         function muatDataPerformaAtlet() {
             const idAtlet = document.getElementById('pilih-atlet').value;
             const infoBox = document.getElementById('info-pengisian');
+            const blokAkhir = document.getElementById('blok-tes-akhir');
+            const blokLocked = document.getElementById('blok-tes-akhir-locked');
             
             if(!idAtlet) {
                 document.getElementById('form-performa').reset();
                 infoBox.classList.add('hidden');
+                blokAkhir.classList.add('hidden');
+                blokLocked.classList.remove('hidden');
                 hitungSkill('awal'); hitungSkill('akhir');
                 return;
             }
@@ -962,7 +977,7 @@
             const p = dbPerforma.find(x => x.idAtlet === idAtlet);
             
             if(p) {
-                // Memuat nilai yang ada (Bisa jadi cuma Awal yang terisi)
+                // Memuat nilai Tes Awal
                 setValSafe('tgltes_awal', p.tgltes_awal || p.tglTes || p.tgltesawal || '');
                 setValSafe('vo2_awal', p.vo2_awal || p.vo2 || p.vo2awal || '');
                 setValSafe('runtwo_awal', p.runtwo_awal || p.runtwoawal || '');
@@ -976,6 +991,7 @@
                 setValSafe('wk_stump_awal', p.wk_stump_awal || p.wkstumpawal || '');
                 setValSafe('catatan_awal', p.catatan_awal || p.catatanawal || p.catatan || '');
 
+                // Memuat nilai Tes Akhir
                 setValSafe('tgltes_akhir', p.tgltes_akhir || p.tgltesakhir || '');
                 setValSafe('vo2_akhir', p.vo2_akhir || p.vo2akhir || '');
                 setValSafe('runtwo_akhir', p.runtwo_akhir || p.runtwoakhir || '');
@@ -989,18 +1005,27 @@
                 setValSafe('wk_stump_akhir', p.wk_stump_akhir || p.wkstumpakhir || '');
                 setValSafe('catatan_akhir', p.catatan_akhir || p.catatanakhir || '');
                 
-                // Tampilkan info visual jika data sudah pernah diisi
-                if(p.tgltes_awal || p.tglTes) {
+                // Atur visibilitas "Tes Akhir" HANYA jika "Tes Awal" sudah diisi
+                if(p.tgltes_awal || p.tglTes || p.tgltesawal) {
                     infoBox.classList.remove('hidden');
+                    blokAkhir.classList.remove('hidden');
+                    blokLocked.classList.add('hidden');
                 } else {
                     infoBox.classList.add('hidden');
+                    blokAkhir.classList.add('hidden');
+                    blokLocked.classList.remove('hidden');
                 }
 
                 hitungSkill('awal'); hitungSkill('akhir');
             } else {
                 document.getElementById('form-performa').reset();
                 document.getElementById('pilih-atlet').value = idAtlet;
+                
+                // Form baru murni: sembunyikan blok tes akhir
                 infoBox.classList.add('hidden');
+                blokAkhir.classList.add('hidden');
+                blokLocked.classList.remove('hidden');
+                
                 hitungSkill('awal'); hitungSkill('akhir');
             }
         }
@@ -1014,32 +1039,48 @@
             const idAtletDipilih = document.getElementById('pilih-atlet').value;
             const atletTerpilih = dbAtlet.find(a => a.id === idAtletDipilih);
             
-            // Mengambil data lama (jika ada) untuk memastikan key yang belum terekam di form tidak hilang saat merge
             const existingData = dbPerforma.find(x => x.idAtlet === idAtletDipilih) || {};
             
-            // Membuat object baru dengan mengambil data dari form secara real-time.
-            // Karena muatDataPerformaAtlet sudah mengisi form dengan data lama,
-            // maka jika user hanya mengisi Tes Akhir, nilai Tes Awal di form akan ikut terkirim/ter-merge kembali dengan aman.
+            // Cek apakah blok akhir saat ini sedang dirender/tampil
+            const isAkhirVisible = !document.getElementById('blok-tes-akhir').classList.contains('hidden');
+            
+            // 1. Selalu ambil atribut pokok dan Tes Awal (KARENA INI SELALU TAMPIL)
             const pBaru = {
                 ...existingData, 
                 idAtlet: idAtletDipilih,
                 nama: atletTerpilih ? atletTerpilih.nama : '', 
+                last_updated: Date.now(),
                 
-                tgltes_awal: getValSafe('tgltes_awal'), vo2_awal: getValSafe('vo2_awal'),
-                runtwo_awal: getValSafe('runtwo_awal'), sprint_awal: getValSafe('sprint_awal'),
-                runs_awal: getValSafe('runs_awal'), control_awal: getValSafe('control_awal'), 
-                akurat_awal: getValSafe('akurat_awal'), tangkap_awal: getValSafe('tangkap_awal'),
-                hadang_awal: getValSafe('hadang_awal'), wk_col_awal: getValSafe('wk_col_awal'), 
-                wk_stump_awal: getValSafe('wk_stump_awal'), catatan_awal: getValSafe('catatan_awal'),
-                
-                tgltes_akhir: getValSafe('tgltes_akhir'), vo2_akhir: getValSafe('vo2_akhir'),
-                runtwo_akhir: getValSafe('runtwo_akhir'), sprint_akhir: getValSafe('sprint_akhir'),
-                runs_akhir: getValSafe('runs_akhir'), control_akhir: getValSafe('control_akhir'),
-                akurat_akhir: getValSafe('akurat_akhir'), tangkap_akhir: getValSafe('tangkap_akhir'),
-                hadang_akhir: getValSafe('hadang_akhir'), wk_col_akhir: getValSafe('wk_col_akhir'),
-                wk_stump_akhir: getValSafe('wk_stump_akhir'), catatan_akhir: getValSafe('catatan_akhir'),
-                last_updated: Date.now()
+                tgltes_awal: getValSafe('tgltes_awal'), 
+                vo2_awal: getValSafe('vo2_awal'),
+                runtwo_awal: getValSafe('runtwo_awal'), 
+                sprint_awal: getValSafe('sprint_awal'),
+                runs_awal: getValSafe('runs_awal'), 
+                control_awal: getValSafe('control_awal'), 
+                akurat_awal: getValSafe('akurat_awal'), 
+                tangkap_awal: getValSafe('tangkap_awal'),
+                hadang_awal: getValSafe('hadang_awal'), 
+                wk_col_awal: getValSafe('wk_col_awal'), 
+                wk_stump_awal: getValSafe('wk_stump_awal'), 
+                catatan_awal: getValSafe('catatan_awal')
             };
+
+            // 2. Ambil nilai Tes Akhir HANYA JIKA gembok/kuncinya telah terbuka.
+            // Jika masih terkunci (berarti saat ini kita baru isi tes awal), maka data "_akhir" sama sekali tidak digabungkan (skip).
+            if (isAkhirVisible) {
+                pBaru.tgltes_akhir = getValSafe('tgltes_akhir');
+                pBaru.vo2_akhir = getValSafe('vo2_akhir');
+                pBaru.runtwo_akhir = getValSafe('runtwo_akhir');
+                pBaru.sprint_akhir = getValSafe('sprint_akhir');
+                pBaru.runs_akhir = getValSafe('runs_akhir');
+                pBaru.control_akhir = getValSafe('control_akhir');
+                pBaru.akurat_akhir = getValSafe('akurat_akhir');
+                pBaru.tangkap_akhir = getValSafe('tangkap_akhir');
+                pBaru.hadang_akhir = getValSafe('hadang_akhir');
+                pBaru.wk_col_akhir = getValSafe('wk_col_akhir');
+                pBaru.wk_stump_akhir = getValSafe('wk_stump_akhir');
+                pBaru.catatan_akhir = getValSafe('catatan_akhir');
+            }
 
             // Timpa lokal
             dbPerforma = dbPerforma.filter(x => x.idAtlet !== pBaru.idAtlet);
@@ -1049,7 +1090,11 @@
             if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL.includes("script.google.com")) {
                 const formData = new FormData();
                 formData.append('jenis_data', 'performa');
-                for (let key in pBaru) { formData.append(key, pBaru[key]); }
+                
+                // PENTING: Hanya data yang benar-benar ada di objek pBaru yang akan dikirim (Data akhir di-skip jika UI masih terkunci)
+                for (let key in pBaru) { 
+                    formData.append(key, pBaru[key]); 
+                }
                 
                 fetch(GOOGLE_SHEETS_URL, { method: 'POST', body: formData })
                 .then(res => res.json())
@@ -1072,12 +1117,15 @@
         }
 
         function selesaiSimpanPerforma(btn) {
-            showToast('Evaluasi Tersimpan!', 'Data Performa (Gabungan) berhasil disimpan ke database.');
+            showToast('Evaluasi Tersimpan!', 'Data Performa berhasil disimpan ke database.');
             btn.innerText = "Simpan Rekam Performa";
             btn.disabled = false;
+            
+            // Reset dan set opsi dropdown ke kosong untuk mereset seluruh form block UI
             document.getElementById('form-performa').reset();
-            document.getElementById('info-pengisian').classList.add('hidden');
-            hitungSkill('awal'); hitungSkill('akhir');
+            document.getElementById('pilih-atlet').value = "";
+            muatDataPerformaAtlet(); 
+            
             bukaTab('tab-dashboard');
         }
 
