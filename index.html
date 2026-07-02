@@ -168,7 +168,7 @@
 
         <div class="vintage-panel p-6 sm:p-8 md:p-12 max-w-md w-full text-center border-t-4 border-t-brand-500 relative z-10 shadow-2xl mx-auto">
             <div class="w-20 h-20 bg-white rounded-2xl shadow-sm border border-slate-100 mx-auto mb-6 flex items-center justify-center overflow-hidden p-2">
-                <img id="logo-pci-login" src="https://d13ir53smqqeyp.cloudfront.net/flags/cr-flags/FC-DKJ@2x.png" alt="Logo PCI" class="w-full h-full object-contain">
+                <img id="logo-pci-login" src="PCI.jpeg" alt="Logo PCI" class="w-full h-full object-contain">
             </div>
             
             <h1 class="text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">Arsip Cricket DKI</h1>
@@ -318,7 +318,7 @@
             <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-100 pb-6">
                 <div>
                     <h2 class="text-xl font-bold text-slate-900">Evaluasi Performa Fisik & Teknis</h2>
-                    <p class="text-sm text-slate-500 mt-1 max-w-lg">Persentase skor keterampilan akan dihitung otomatis oleh sistem berdasarkan input raw score.</p>
+                    <p class="text-sm text-slate-500 mt-1 max-w-lg">Menggunakan format algoritma perhitungan persentase & taktis ICC Level 2.</p>
                 </div>
                 <div class="w-full md:w-72">
                     <label class="text-xs font-bold text-brand-600 mb-1.5 block">Pilih Subjek Atlet</label>
@@ -343,58 +343,68 @@
                         </div>
 
                         <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Kapasitas Fisik</h4>
-                            <div class="grid grid-cols-2 gap-4">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Kapasitas Fisik Utama</h4>
+                            <div class="grid grid-cols-3 gap-4">
                                 <div class="flex flex-col">
-                                    <label class="text-[11px] font-bold text-slate-600 mb-1">VO2 Max</label>
-                                    <input type="number" step="0.1" id="vo2_awal" required class="vintage-input bg-white" placeholder="45.5">
+                                    <label class="text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1">VO2 Max</label>
+                                    <input type="number" step="0.1" id="vo2_awal" required class="vintage-input bg-white px-2" placeholder="45.5">
                                 </div>
                                 <div class="flex flex-col">
-                                    <label class="text-[11px] font-bold text-slate-600 mb-1">Sprint 30m (Detik)</label>
-                                    <input type="number" step="0.01" id="sprint_awal" required class="vintage-input bg-white" placeholder="4.20">
+                                    <label class="text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1" title="Lari Bolak-balik 2x Pitch">Run 2 (Detik)</label>
+                                    <input type="number" step="0.01" id="runtwo_awal" required class="vintage-input bg-white px-2" placeholder="6.50">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1">Sprint 30m (Dtk)</label>
+                                    <input type="number" step="0.01" id="sprint_awal" required class="vintage-input bg-white px-2" placeholder="4.20">
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-6">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Metrik Keterampilan Teknis</h4>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Metrik Teknis ICC (Base 24 & 20)</h4>
                             <div class="space-y-4">
-                                <div class="flex flex-col">
+                                <!-- Batting -->
+                                <div class="grid grid-cols-2 gap-4 pb-3 border-b border-slate-100">
+                                    <div class="flex flex-col">
+                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Batting: Runs</label><span id="disp_sr_awal" class="text-[11px] font-bold text-brand-600">SR 0.0</span></div>
+                                        <input type="number" id="runs_awal" oninput="hitungSkill('awal')" required class="vintage-input text-sm" placeholder="Total dari 24 Bola">
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Control Shots</label><span id="disp_cp_awal" class="text-[11px] font-bold text-brand-600">0%</span></div>
+                                        <input type="number" id="control_awal" oninput="hitungSkill('awal')" required class="vintage-input text-sm" placeholder="Akurat dari 24 Bola">
+                                    </div>
+                                </div>
+                                
+                                <!-- Bowling -->
+                                <div class="flex flex-col pb-3 border-b border-slate-100">
                                     <div class="flex justify-between mb-1">
-                                        <label class="text-[11px] font-bold text-slate-600">Akurasi Bowling (Maks 24)</label>
+                                        <label class="text-[11px] font-bold text-slate-600">Bowling: Good Length Hits (Maks 24)</label>
                                         <span id="disp_akurasi_awal" class="text-[11px] font-bold text-brand-600">0%</span>
                                     </div>
-                                    <input type="number" id="akurat_awal" oninput="hitungSkill('awal')" required class="vintage-input" placeholder="Lemparan akurat...">
+                                    <input type="number" id="akurat_awal" oninput="hitungSkill('awal')" required class="vintage-input text-sm" placeholder="Lemparan target akurat...">
                                 </div>
-                                <div class="flex flex-col">
-                                    <div class="flex justify-between mb-1">
-                                        <label class="text-[11px] font-bold text-slate-600">Strike Rate (Dari 30 Bola)</label>
-                                        <span id="disp_sr_awal" class="text-[11px] font-bold text-brand-600">SR 0.0</span>
-                                    </div>
-                                    <input type="number" id="runs_awal" oninput="hitungSkill('awal')" required class="vintage-input" placeholder="Total runs...">
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
+
+                                <!-- Fielding -->
+                                <div class="grid grid-cols-2 gap-4 pb-3 border-b border-slate-100">
                                     <div class="flex flex-col">
                                         <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Catching (Maks 20)</label><span id="disp_tangkap_awal" class="text-[11px] font-bold text-slate-500">0%</span></div>
-                                        <input type="number" id="tangkap_awal" oninput="hitungSkill('awal')" required class="vintage-input" placeholder="Sukses">
+                                        <input type="number" id="tangkap_awal" oninput="hitungSkill('awal')" required class="vintage-input text-sm" placeholder="Sukses Tangkap">
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Stops (Maks 15)</label><span id="disp_hadang_awal" class="text-[11px] font-bold text-slate-500">0%</span></div>
-                                        <input type="number" id="hadang_awal" oninput="hitungSkill('awal')" required class="vintage-input" placeholder="Sukses">
+                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Stops (Maks 20)</label><span id="disp_hadang_awal" class="text-[11px] font-bold text-slate-500">0%</span></div>
+                                        <input type="number" id="hadang_awal" oninput="hitungSkill('awal')" required class="vintage-input text-sm" placeholder="Clean Stops">
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-3 gap-3 pt-2 border-t border-slate-100">
+
+                                <!-- Wicket Keeping -->
+                                <div class="grid grid-cols-2 gap-4 pt-1">
                                     <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Glove</label><span id="disp_glove_awal" class="text-[10px] text-slate-400">0%</span></div>
-                                        <input type="number" id="glove_awal" oninput="hitungSkill('awal')" class="vintage-input text-xs px-2" placeholder="/20">
+                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Clean Col.</label></div>
+                                        <input type="number" id="wk_col_awal" oninput="hitungSkill('awal')" class="vintage-input text-sm" placeholder="Koleksi Bersih">
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: React</label><span id="disp_reaction_awal" class="text-[10px] text-slate-400">0%</span></div>
-                                        <input type="number" id="reaction_awal" oninput="hitungSkill('awal')" class="vintage-input text-xs px-2" placeholder="/15">
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Stump</label><span id="disp_stumping_awal" class="text-[10px] text-slate-400">0%</span></div>
-                                        <input type="number" id="stumping_awal" oninput="hitungSkill('awal')" class="vintage-input text-xs px-2" placeholder="/10">
+                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Fast Stump</label><span id="disp_wk_awal" class="text-[10px] font-bold text-brand-600">0%</span></div>
+                                        <input type="number" id="wk_stump_awal" oninput="hitungSkill('awal')" class="vintage-input text-sm" placeholder="Stumping Cepat">
                                     </div>
                                 </div>
                             </div>
@@ -417,58 +427,68 @@
                         </div>
 
                         <div class="bg-brand-50 rounded-xl p-4 mb-6 border border-brand-100">
-                            <h4 class="text-xs font-bold text-brand-400 uppercase tracking-wider mb-4">Kapasitas Fisik</h4>
-                            <div class="grid grid-cols-2 gap-4">
+                            <h4 class="text-xs font-bold text-brand-400 uppercase tracking-wider mb-4">Kapasitas Fisik Utama</h4>
+                            <div class="grid grid-cols-3 gap-4">
                                 <div class="flex flex-col">
-                                    <label class="text-[11px] font-bold text-slate-600 mb-1">VO2 Max</label>
-                                    <input type="number" step="0.1" id="vo2_akhir" class="vintage-input bg-white border-brand-200" placeholder="45.5">
+                                    <label class="text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1">VO2 Max</label>
+                                    <input type="number" step="0.1" id="vo2_akhir" class="vintage-input bg-white border-brand-200 px-2" placeholder="45.5">
                                 </div>
                                 <div class="flex flex-col">
-                                    <label class="text-[11px] font-bold text-slate-600 mb-1">Sprint 30m (Detik)</label>
-                                    <input type="number" step="0.01" id="sprint_akhir" class="vintage-input bg-white border-brand-200" placeholder="4.20">
+                                    <label class="text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1" title="Lari Bolak-balik 2x Pitch">Run 2 (Detik)</label>
+                                    <input type="number" step="0.01" id="runtwo_akhir" class="vintage-input bg-white border-brand-200 px-2" placeholder="6.50">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="text-[10px] sm:text-[11px] font-bold text-slate-600 mb-1">Sprint 30m (Dtk)</label>
+                                    <input type="number" step="0.01" id="sprint_akhir" class="vintage-input bg-white border-brand-200 px-2" placeholder="4.20">
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-6">
-                            <h4 class="text-xs font-bold text-brand-400 uppercase tracking-wider mb-4">Metrik Keterampilan Teknis</h4>
+                            <h4 class="text-xs font-bold text-brand-400 uppercase tracking-wider mb-4">Metrik Teknis ICC (Base 24 & 20)</h4>
                             <div class="space-y-4">
-                                <div class="flex flex-col">
+                                <!-- Batting -->
+                                <div class="grid grid-cols-2 gap-4 pb-3 border-b border-slate-100">
+                                    <div class="flex flex-col">
+                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Batting: Runs</label><span id="disp_sr_akhir" class="text-[11px] font-bold text-brand-600">SR 0.0</span></div>
+                                        <input type="number" id="runs_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-sm border-brand-200" placeholder="Total dari 24 Bola">
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Control Shots</label><span id="disp_cp_akhir" class="text-[11px] font-bold text-brand-600">0%</span></div>
+                                        <input type="number" id="control_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-sm border-brand-200" placeholder="Akurat dari 24 Bola">
+                                    </div>
+                                </div>
+                                
+                                <!-- Bowling -->
+                                <div class="flex flex-col pb-3 border-b border-slate-100">
                                     <div class="flex justify-between mb-1">
-                                        <label class="text-[11px] font-bold text-slate-600">Akurasi Bowling (Maks 24)</label>
+                                        <label class="text-[11px] font-bold text-slate-600">Bowling: Good Length Hits (Maks 24)</label>
                                         <span id="disp_akurasi_akhir" class="text-[11px] font-bold text-brand-600">0%</span>
                                     </div>
-                                    <input type="number" id="akurat_akhir" oninput="hitungSkill('akhir')" class="vintage-input" placeholder="Lemparan akurat...">
+                                    <input type="number" id="akurat_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-sm border-brand-200" placeholder="Lemparan target akurat...">
                                 </div>
-                                <div class="flex flex-col">
-                                    <div class="flex justify-between mb-1">
-                                        <label class="text-[11px] font-bold text-slate-600">Strike Rate (Dari 30 Bola)</label>
-                                        <span id="disp_sr_akhir" class="text-[11px] font-bold text-brand-600">SR 0.0</span>
-                                    </div>
-                                    <input type="number" id="runs_akhir" oninput="hitungSkill('akhir')" class="vintage-input" placeholder="Total runs...">
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
+
+                                <!-- Fielding -->
+                                <div class="grid grid-cols-2 gap-4 pb-3 border-b border-slate-100">
                                     <div class="flex flex-col">
                                         <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Catching (Maks 20)</label><span id="disp_tangkap_akhir" class="text-[11px] font-bold text-slate-500">0%</span></div>
-                                        <input type="number" id="tangkap_akhir" oninput="hitungSkill('akhir')" class="vintage-input" placeholder="Sukses">
+                                        <input type="number" id="tangkap_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-sm border-brand-200" placeholder="Sukses Tangkap">
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Stops (Maks 15)</label><span id="disp_hadang_akhir" class="text-[11px] font-bold text-slate-500">0%</span></div>
-                                        <input type="number" id="hadang_akhir" oninput="hitungSkill('akhir')" class="vintage-input" placeholder="Sukses">
+                                        <div class="flex justify-between mb-1"><label class="text-[11px] font-bold text-slate-600">Stops (Maks 20)</label><span id="disp_hadang_akhir" class="text-[11px] font-bold text-slate-500">0%</span></div>
+                                        <input type="number" id="hadang_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-sm border-brand-200" placeholder="Clean Stops">
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-3 gap-3 pt-2 border-t border-slate-100">
+
+                                <!-- Wicket Keeping -->
+                                <div class="grid grid-cols-2 gap-4 pt-1">
                                     <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Glove</label><span id="disp_glove_akhir" class="text-[10px] text-slate-400">0%</span></div>
-                                        <input type="number" id="glove_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-xs px-2" placeholder="/20">
+                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Clean Col.</label></div>
+                                        <input type="number" id="wk_col_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-sm border-brand-200" placeholder="Koleksi Bersih">
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: React</label><span id="disp_reaction_akhir" class="text-[10px] text-slate-400">0%</span></div>
-                                        <input type="number" id="reaction_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-xs px-2" placeholder="/15">
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Stump</label><span id="disp_stumping_akhir" class="text-[10px] text-slate-400">0%</span></div>
-                                        <input type="number" id="stumping_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-xs px-2" placeholder="/10">
+                                        <div class="flex justify-between mb-1"><label class="text-[10px] font-bold text-slate-500">WK: Fast Stump</label><span id="disp_wk_akhir" class="text-[10px] font-bold text-brand-600">0%</span></div>
+                                        <input type="number" id="wk_stump_akhir" oninput="hitungSkill('akhir')" class="vintage-input text-sm border-brand-200" placeholder="Stumping Cepat">
                                     </div>
                                 </div>
                             </div>
@@ -483,7 +503,7 @@
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p class="text-xs text-slate-400 font-medium">🛡️ Data akan tersimpan & terenkripsi ke Cloud Base.</p>
+                    <p class="text-xs text-slate-400 font-medium">🛡️ Data dilengkapi dengan sistem Sinkronisasi Anti-Konflik.</p>
                     <button type="submit" id="btn-submit-performa" class="vintage-btn px-8 py-3 bg-slate-900 text-white border-transparent hover:bg-slate-800 shadow-md w-full sm:w-auto text-sm">Simpan Rekam Performa</button>
                 </div>
             </form>
@@ -529,7 +549,7 @@
             </div>
             
             <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-100">
-                <p class="text-xs text-slate-400 text-center sm:text-left">Sistem terhubung dengan Cloud Storage. (Data foto besar tidak disimpan di memori lokal ponsel Anda).</p>
+                <p class="text-xs text-slate-400 text-center sm:text-left">Sistem terhubung dengan Cloud Storage dengan Sinkronisasi Berbasis Waktu (Anti-Konflik).</p>
                 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <button onclick="tarikDataDariCloud()" class="vintage-btn px-4 py-2.5 text-xs font-semibold text-blue-600 bg-blue-50 border-blue-100 hover:bg-blue-100 hover:border-blue-200 transition-colors w-full sm:w-auto">Tarik Data Cloud</button>
                     <button onclick="hapusSemuaData()" class="vintage-btn px-4 py-2.5 text-xs font-semibold text-red-600 bg-red-50 border-red-100 hover:bg-red-100 hover:border-red-200 transition-colors w-full sm:w-auto">Reset Arsip Lokal</button>
@@ -589,7 +609,7 @@
 
     <script>
         // =========================================================================
-        // IMPLEMENTASI DYNAMIC PWA (Agar tetap 1 file tapi bisa diinstal di Home Screen)
+        // IMPLEMENTASI DYNAMIC PWA
         // =========================================================================
         (function initPWA() {
             const manifest = {
@@ -611,7 +631,7 @@
 
             const swCode = `
                 self.addEventListener('install', (e) => { self.skipWaiting(); });
-                self.addEventListener('fetch', (e) => { }); // Minimal bypass agar diakui sebagai PWA installable
+                self.addEventListener('fetch', (e) => { }); 
             `;
             const swBlob = new Blob([swCode], {type: 'application/javascript'});
             const swUrl = URL.createObjectURL(swBlob);
@@ -622,9 +642,9 @@
         })();
 
         // =========================================================================
-        // URL SPREADSHEET (GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA YANG BARU)
+        // URL SPREADSHEET 
         // =========================================================================
-        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyF9aE9WVfN_t1l0tMNlW6YYxysvkOzNhwof7Ol0eLGlq6CcFsPoPCL2SFZDgtrBGyVrw/exec";
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyoJzb_T2R74ZYomAKNJW9FpYYLOjNwFHElmrVbxvWfN5YDxGRBS6GigrJhdsFaYnIw/exec";
 
         let dbAtlet = JSON.parse(localStorage.getItem('kriket_atlet_dki_v2')) || [];
         let dbPerforma = JSON.parse(localStorage.getItem('kriket_performa_dki_v2')) || [];
@@ -655,13 +675,18 @@
         function getValSafe(id) { const el = document.getElementById(id); return el ? el.value : ''; }
         function setValSafe(id, val) { const el = document.getElementById(id); if (el) el.value = val; }
 
+        // PERBAIKAN: Gunakan Endpoint lh3 yang lebih agresif & bebas blokir CORB/CORS di tag img
         function dapatkanUrlFotoValid(urlAsli) {
             if (!urlAsli) return '';
             let url = urlAsli.trim();
             if (url.startsWith('data:image')) return url;
-            const driveRegex = /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|docs\.google\.com\/(?:uc\?id=|file\/d\/))([a-zA-Z0-9_-]+)/;
+            
+            const driveRegex = /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)|docs\.google\.com\/(?:uc\?id=|file\/d\/)|id=)([a-zA-Z0-9_-]{25,})/;
             const match = url.match(driveRegex);
-            if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
+            
+            if (match && match[1]) {
+                return `https://lh3.googleusercontent.com/d/${match[1]}`;
+            }
             return url;
         }
 
@@ -745,7 +770,13 @@
                 .then(data => {
                     if (data.status === "sukses") {
                         const localCount = dbAtlet.length + dbPerforma.length;
-                        const cloudCount = (data.atlet ? data.atlet.length : 0) + (data.performa ? data.performa.length : 0);
+                        
+                        // Menghitung id unik dari penggabungan 2 sheet di backend
+                        const perfAwal = data.performaAwal || [];
+                        const perfAkhir = data.performaAkhir || [];
+                        const allPerfIds = new Set([...perfAwal.map(p=>p.idAtlet), ...perfAkhir.map(p=>p.idAtlet)]);
+
+                        const cloudCount = (data.atlet ? data.atlet.length : 0) + allPerfIds.size;
 
                         if (localCount === cloudCount) {
                             dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm";
@@ -804,7 +835,7 @@
             reader.readAsDataURL(file);
         }
 
-        // --- SIMPAN ATLET KE SHEETS & GOOGLE DRIVE ---
+        // --- SIMPAN ATLET KE SHEETS & LOKAL ---
         function simpanAtlet(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-atlet');
@@ -826,10 +857,11 @@
                 tinggi: getValSafe('tinggi'),
                 berat: getValSafe('berat'),
                 spesialisasi: getValSafe('spesialisasi'),
-                tangan: getValSafe('tangan')
+                tangan: getValSafe('tangan'),
+                // PERBAIKAN 3: Timestamp untuk resolusi konflik
+                last_updated: Date.now()
             };
 
-            // Simpan sementara agar aplikasi terasa cepat
             dbAtlet.push(atletBaru);
             localStorage.setItem('kriket_atlet_dki_v2', JSON.stringify(dbAtlet));
             
@@ -837,19 +869,15 @@
                 const formData = new FormData();
                 formData.append('jenis_data', 'atlet');
                 for (let key in atletBaru) { 
-                    // Maps variable to proper format for form data
                     formData.append(key, key === 'foto' ? fotoBase64Sementara : atletBaru[key]); 
                 }
                 
-                // MENGHILANGKAN mode: 'no-cors' agar try-catch di Backend terbaca
                 fetch(GOOGLE_SHEETS_URL, { method: 'POST', body: formData })
                 .then(res => res.json())
                 .then((data) => {
                     if(data.status === 'sukses') {
-                        // Jika berhasil, panggil sukses
                         selesaiSimpanAtlet(btn, atletBaru.nama, idBaru);
                     } else {
-                        // Jika server merespon error
                         showToast('Error Cloud', data.pesan || "Terjadi kesalahan di server.", true);
                         btn.innerText = "Simpan & Kirim ke Litbang";
                         btn.disabled = false;
@@ -857,7 +885,7 @@
                 }).catch(err => {
                     console.error('Error Network:', err);
                     showToast('Koneksi Lemah', 'Disimpan secara lokal. Gagal sinkron ke Cloud.', true);
-                    selesaiSimpanAtlet(btn, atletBaru.nama, idBaru); // Tetap di-resolve lokal
+                    selesaiSimpanAtlet(btn, atletBaru.nama, idBaru); 
                 });
             } else {
                 selesaiSimpanAtlet(btn, atletBaru.nama, idBaru);
@@ -888,17 +916,34 @@
             hitungSkill('awal'); hitungSkill('akhir');
         }
 
+        // --- SISTEM KALKULASI PERSENTASE ICC LEVEL 2 ---
         function hitungSkill(prefix) {
             const setDisp = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
             const getVal = (id) => { const el = document.getElementById(id); return el && el.value !== '' ? parseFloat(el.value) : null; };
 
-            let ak = getVal('akurat_' + prefix); setDisp('disp_akurasi_' + prefix, ak !== null ? ((ak / 24) * 100).toFixed(1) + '%' : '0%');
-            let sr = getVal('runs_' + prefix); setDisp('disp_sr_' + prefix, sr !== null ? 'SR ' + ((sr / 30) * 100).toFixed(2) : 'SR 0.0');
-            let tk = getVal('tangkap_' + prefix); setDisp('disp_tangkap_' + prefix, tk !== null ? ((tk / 20) * 100).toFixed(1) + '%' : '0%');
-            let hd = getVal('hadang_' + prefix); setDisp('disp_hadang_' + prefix, hd !== null ? ((hd / 15) * 100).toFixed(1) + '%' : '0%');
-            let gl = getVal('glove_' + prefix); setDisp('disp_glove_' + prefix, gl !== null ? ((gl / 20) * 100).toFixed(1) + '%' : '0%');
-            let rc = getVal('reaction_' + prefix); setDisp('disp_reaction_' + prefix, rc !== null ? ((rc / 15) * 100).toFixed(1) + '%' : '0%');
-            let st = getVal('stumping_' + prefix); setDisp('disp_stumping_' + prefix, st !== null ? ((st / 10) * 100).toFixed(1) + '%' : '0%');
+            let runs = getVal('runs_' + prefix);
+            let ctrl = getVal('control_' + prefix);
+            let ak = getVal('akurat_' + prefix);
+            let tk = getVal('tangkap_' + prefix);
+            let hd = getVal('hadang_' + prefix);
+            let wkc = getVal('wk_col_' + prefix);
+            let wks = getVal('wk_stump_' + prefix);
+
+            // Formula: (Val / 24) * 100 untuk Batting/Bowling
+            setDisp('disp_sr_' + prefix, runs !== null ? 'SR ' + ((runs / 24) * 100).toFixed(1) : 'SR 0.0');
+            setDisp('disp_cp_' + prefix, ctrl !== null ? ((ctrl / 24) * 100).toFixed(1) + '%' : '0%');
+            setDisp('disp_akurasi_' + prefix, ak !== null ? ((ak / 24) * 100).toFixed(1) + '%' : '0%');
+            
+            // Formula: (Val / 20) * 100 untuk Fielding/WK
+            setDisp('disp_tangkap_' + prefix, tk !== null ? ((tk / 20) * 100).toFixed(1) + '%' : '0%');
+            setDisp('disp_hadang_' + prefix, hd !== null ? ((hd / 20) * 100).toFixed(1) + '%' : '0%');
+            
+            let wkTotal = ((wkc || 0) + (wks || 0));
+            if (wkc !== null || wks !== null) {
+                setDisp('disp_wk_' + prefix, ((wkTotal / 20) * 100).toFixed(1) + '%');
+            } else {
+                setDisp('disp_wk_' + prefix, '0%');
+            }
         }
 
         function muatDataPerformaAtlet() {
@@ -909,32 +954,35 @@
                 return;
             }
 
-            const performa = dbPerforma.find(p => p.idAtlet === idAtlet);
+            const p = dbPerforma.find(x => x.idAtlet === idAtlet);
             
-            if(performa) {
-                setValSafe('tgltes_awal', performa.tgltes_awal || performa.tglTes || '');
-                setValSafe('vo2_awal', performa.vo2_awal || performa.vo2 || '');
-                setValSafe('sprint_awal', performa.sprint_awal || performa.sprint || '');
-                setValSafe('runs_awal', performa.runs_awal || '');
-                setValSafe('akurat_awal', performa.akurat_awal || '');
-                setValSafe('tangkap_awal', performa.tangkap_awal || '');
-                setValSafe('hadang_awal', performa.hadang_awal || '');
-                setValSafe('glove_awal', performa.glove_awal || '');
-                setValSafe('reaction_awal', performa.reaction_awal || '');
-                setValSafe('stumping_awal', performa.stumping_awal || '');
-                setValSafe('catatan_awal', performa.catatan_awal || performa.catatan || '');
+            if(p) {
+                // PERBAIKAN 2: Fallback key data dari spreadsheet agar selalu match dengan Litbang Input
+                setValSafe('tgltes_awal', p.tgltes_awal || p.tglTes || p.tgltesawal || '');
+                setValSafe('vo2_awal', p.vo2_awal || p.vo2 || p.vo2awal || '');
+                setValSafe('runtwo_awal', p.runtwo_awal || p.runtwoawal || '');
+                setValSafe('sprint_awal', p.sprint_awal || p.sprint || p.sprintawal || '');
+                setValSafe('runs_awal', p.runs_awal || p.runsawal || '');
+                setValSafe('control_awal', p.control_awal || p.controlawal || '');
+                setValSafe('akurat_awal', p.akurat_awal || p.akuratawal || '');
+                setValSafe('tangkap_awal', p.tangkap_awal || p.tangkapawal || '');
+                setValSafe('hadang_awal', p.hadang_awal || p.hadangawal || '');
+                setValSafe('wk_col_awal', p.wk_col_awal || p.wkcolawal || '');
+                setValSafe('wk_stump_awal', p.wk_stump_awal || p.wkstumpawal || '');
+                setValSafe('catatan_awal', p.catatan_awal || p.catatanawal || p.catatan || '');
 
-                setValSafe('tgltes_akhir', performa.tgltes_akhir || '');
-                setValSafe('vo2_akhir', performa.vo2_akhir || '');
-                setValSafe('sprint_akhir', performa.sprint_akhir || '');
-                setValSafe('runs_akhir', performa.runs_akhir || '');
-                setValSafe('akurat_akhir', performa.akurat_akhir || '');
-                setValSafe('tangkap_akhir', performa.tangkap_akhir || '');
-                setValSafe('hadang_akhir', performa.hadang_akhir || '');
-                setValSafe('glove_akhir', performa.glove_akhir || '');
-                setValSafe('reaction_akhir', performa.reaction_akhir || '');
-                setValSafe('stumping_akhir', performa.stumping_akhir || '');
-                setValSafe('catatan_akhir', performa.catatan_akhir || '');
+                setValSafe('tgltes_akhir', p.tgltes_akhir || p.tgltesakhir || '');
+                setValSafe('vo2_akhir', p.vo2_akhir || p.vo2akhir || '');
+                setValSafe('runtwo_akhir', p.runtwo_akhir || p.runtwoakhir || '');
+                setValSafe('sprint_akhir', p.sprint_akhir || p.sprintakhir || '');
+                setValSafe('runs_akhir', p.runs_akhir || p.runsakhir || '');
+                setValSafe('control_akhir', p.control_akhir || p.controlakhir || '');
+                setValSafe('akurat_akhir', p.akurat_akhir || p.akuratakhir || '');
+                setValSafe('tangkap_akhir', p.tangkap_akhir || p.tangkapakhir || '');
+                setValSafe('hadang_akhir', p.hadang_akhir || p.hadangakhir || '');
+                setValSafe('wk_col_akhir', p.wk_col_akhir || p.wkcolakhir || '');
+                setValSafe('wk_stump_akhir', p.wk_stump_akhir || p.wkstumpakhir || '');
+                setValSafe('catatan_akhir', p.catatan_akhir || p.catatanakhir || '');
                 
                 hitungSkill('awal'); hitungSkill('akhir');
             } else {
@@ -950,22 +998,28 @@
             btn.innerText = "Mengirim ke Sheets...";
             btn.disabled = true;
             
+            const idAtletDipilih = document.getElementById('pilih-atlet').value;
+            const atletTerpilih = dbAtlet.find(a => a.id === idAtletDipilih);
+            
             const pBaru = {
-                idAtlet: document.getElementById('pilih-atlet').value,
+                idAtlet: idAtletDipilih,
+                nama: atletTerpilih ? atletTerpilih.nama : '', // Menambahkan nama atlet
                 
                 tgltes_awal: getValSafe('tgltes_awal'), vo2_awal: getValSafe('vo2_awal'),
-                sprint_awal: getValSafe('sprint_awal'), runs_awal: getValSafe('runs_awal'),
+                runtwo_awal: getValSafe('runtwo_awal'), sprint_awal: getValSafe('sprint_awal'),
+                runs_awal: getValSafe('runs_awal'), control_awal: getValSafe('control_awal'), 
                 akurat_awal: getValSafe('akurat_awal'), tangkap_awal: getValSafe('tangkap_awal'),
-                hadang_awal: getValSafe('hadang_awal'), glove_awal: getValSafe('glove_awal'),
-                reaction_awal: getValSafe('reaction_awal'), stumping_awal: getValSafe('stumping_awal'),
-                catatan_awal: getValSafe('catatan_awal'),
+                hadang_awal: getValSafe('hadang_awal'), wk_col_awal: getValSafe('wk_col_awal'), 
+                wk_stump_awal: getValSafe('wk_stump_awal'), catatan_awal: getValSafe('catatan_awal'),
                 
                 tgltes_akhir: getValSafe('tgltes_akhir'), vo2_akhir: getValSafe('vo2_akhir'),
-                sprint_akhir: getValSafe('sprint_akhir'), runs_akhir: getValSafe('runs_akhir'),
+                runtwo_akhir: getValSafe('runtwo_akhir'), sprint_akhir: getValSafe('sprint_akhir'),
+                runs_akhir: getValSafe('runs_akhir'), control_akhir: getValSafe('control_akhir'),
                 akurat_akhir: getValSafe('akurat_akhir'), tangkap_akhir: getValSafe('tangkap_akhir'),
-                hadang_akhir: getValSafe('hadang_akhir'), glove_akhir: getValSafe('glove_akhir'),
-                reaction_akhir: getValSafe('reaction_akhir'), stumping_akhir: getValSafe('stumping_akhir'),
-                catatan_akhir: getValSafe('catatan_akhir')
+                hadang_akhir: getValSafe('hadang_akhir'), wk_col_akhir: getValSafe('wk_col_akhir'),
+                wk_stump_akhir: getValSafe('wk_stump_akhir'), catatan_akhir: getValSafe('catatan_akhir'),
+                // PERBAIKAN 3: Timestamp anti-konflik
+                last_updated: Date.now()
             };
 
             dbPerforma = dbPerforma.filter(x => x.idAtlet !== pBaru.idAtlet);
@@ -1015,19 +1069,14 @@
                 return;
             }
 
-            // MENGELOMPOKKAN DATA BERDASARKAN KLUB DAN KOTA MENGGUNAKAN REDUCE
             const groupedData = dbAtlet.reduce((acc, atlet) => {
                 const groupKey = `${atlet.klub} - ${atlet.kabkota}`;
-                if (!acc[groupKey]) {
-                    acc[groupKey] = [];
-                }
+                if (!acc[groupKey]) acc[groupKey] = [];
                 acc[groupKey].push(atlet);
                 return acc;
             }, {});
 
-            // RENDER DATA YANG SUDAH DIKELOMPOKKAN
             for (const groupKey in groupedData) {
-                // Tambahkan Baris Header/Pemisah Kelompok
                 const trGroup = document.createElement('tr');
                 trGroup.className = "bg-slate-100 border-y border-slate-200";
                 trGroup.innerHTML = `
@@ -1037,13 +1086,15 @@
                 `;
                 tbody.appendChild(trGroup);
 
-                // Render anggota kelompok
                 groupedData[groupKey].forEach(atlet => {
                     const performa = dbPerforma.find(p => p.idAtlet === atlet.id) || null;
                     let statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-600">Belum Ada Tes</span>`;
                     if (performa) {
-                        if (performa.tgltes_akhir && performa.vo2_akhir) statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">Lengkap (Awal & Akhir)</span>`;
-                        else statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200">Hanya Tes Awal</span>`;
+                        // Cek dengan keys dari Apps script juga untuk kepastian indikator
+                        const isAwal = performa.tgltes_awal || performa.tgltesawal || performa.tglTes;
+                        const isAkhir = performa.tgltes_akhir || performa.tgltesakhir;
+                        if (isAkhir && (performa.vo2_akhir || performa.vo2akhir)) statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">Lengkap (Awal & Akhir)</span>`;
+                        else if (isAwal) statusEval = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200">Hanya Tes Awal</span>`;
                     }
                     
                     const tr = document.createElement('tr');
@@ -1062,6 +1113,7 @@
             }
         }
 
+        // --- HELPER UNTUK KALKULASI BACKEND ---
         function getKalkulasi(akhir, awal, pembagi) {
             let numAkhir = parseFloat(akhir); let numAwal = parseFloat(awal);
             if(isNaN(numAkhir) && isNaN(numAwal)) return 0;
@@ -1069,72 +1121,117 @@
             return (finalVal / pembagi) * 100;
         }
 
-        function getKekuatanUtama(performa) {
+        function getLatest(akhir, awal) {
+            let numAkhir = parseFloat(akhir); let numAwal = parseFloat(awal);
+            if(isNaN(numAkhir) && isNaN(numAwal)) return 0;
+            return !isNaN(numAkhir) ? numAkhir : numAwal;
+        }
+
+        // --- ALGORITMA DOMINASI (Dominance Engine) ---
+        function getDominasi(performa) {
             if(!performa) return null;
-            const sr = getKalkulasi(performa.runs_akhir, performa.runs_awal, 30);
-            const ak = getKalkulasi(performa.akurat_akhir, performa.akurat_awal, 24);
-            const tk = getKalkulasi(performa.tangkap_akhir, performa.tangkap_awal, 20);
-            const hd = getKalkulasi(performa.hadang_akhir, performa.hadang_awal, 15);
+            
+            // ICC Base 24 & 20 Calculations menggunakan fallback support keys
+            const getSafe = (keyA, keyB) => performa[keyA] || performa[keyB];
 
-            const scores = [
-                { nama: 'Memukul (Batting)', nilai: sr, raw: 'Strike Rate Tinggi' },
-                { nama: 'Melempar (Bowling)', nilai: ak, raw: ak.toFixed(1) + '%' },
-                { nama: 'Menangkap (Catching)', nilai: tk, raw: tk.toFixed(1) + '%' },
-                { nama: 'Menghadang (Fielding/Stops)', nilai: hd, raw: hd.toFixed(1) + '%' }
-            ];
+            const rAkhir = getSafe('runs_akhir', 'runsakhir'); const rAwal = getSafe('runs_awal', 'runsawal');
+            const cAkhir = getSafe('control_akhir', 'controlakhir'); const cAwal = getSafe('control_awal', 'controlawal');
+            const aAkhir = getSafe('akurat_akhir', 'akuratakhir'); const aAwal = getSafe('akurat_awal', 'akuratawal');
+            const tAkhir = getSafe('tangkap_akhir', 'tangkapakhir'); const tAwal = getSafe('tangkap_awal', 'tangkapawal');
+            const hAkhir = getSafe('hadang_akhir', 'hadangakhir'); const hAwal = getSafe('hadang_akhir', 'hadangawal');
+            const wkcAkhir = getSafe('wk_col_akhir', 'wkcolakhir'); const wkcAwal = getSafe('wk_col_awal', 'wkcolawal');
+            const wksAkhir = getSafe('wk_stump_akhir', 'wkstumpakhir'); const wksAwal = getSafe('wk_stump_awal', 'wkstumpawal');
 
-            scores.sort((a, b) => b.nilai - a.nilai);
-            const best = scores[0];
+            const sr = getKalkulasi(rAkhir, rAwal, 24);
+            const cp = getKalkulasi(cAkhir, cAwal, 24);
+            const ba = getKalkulasi(aAkhir, aAwal, 24);
+            const cr = getKalkulasi(tAkhir, tAwal, 20);
+            const fe = getKalkulasi(hAkhir, hAwal, 20);
+            
+            const wkc = getLatest(wkcAkhir, wkcAwal);
+            const wks = getLatest(wksAkhir, wksAwal);
+            const wk = ((wkc + wks) / 20) * 100;
 
-            if (best.nilai === 0) return null;
-            return {
-                bidang: best.nama, skor: best.raw,
-                deskripsi: `Berdasarkan rekam simulasi, atlet ini menunjukkan dominasi paling menonjol pada aspek <strong>${best.nama}</strong> dibandingkan aspek lainnya.`
-            };
+            let dominasi = "";
+            let desc = "";
+
+            if (wk >= 75) {
+                if (cp >= 75) { dominasi = "Wicket-Keeper Batsman"; desc = "Ganda: Penjaga gawang utama yang juga handal memukul."; }
+                else { dominasi = "Wicket Keeper"; desc = "Spesialis penjaga gawang murni dengan ketangkasan tinggi."; }
+            } else if (cp >= 75 && ba >= 60) {
+                dominasi = "All-Rounder"; desc = "Atlet seimbang yang mahir memukul dan melempar.";
+            } else if (cp >= 75 && ba < 60) {
+                dominasi = "Batsman"; desc = "Pemukul murni dengan persentase kontrol serangan yang baik.";
+            } else if (ba >= 60 && cp < 75) {
+                dominasi = "Bowler"; desc = "Pelempar murni yang fokus pada akurasi panjang (good length).";
+            } else if (cr >= 86 && fe >= 86 && cp < 75 && ba < 60) {
+                dominasi = "Fielding Specialist"; desc = "Sangat berguna sebagai pemain pengganti atau penyelamat poin di area krusial.";
+            } else {
+                dominasi = "Development Player"; desc = "Atlet masih dalam tahap pengembangan dasar teknik (Below Threshold).";
+            }
+
+            return { nama: dominasi, deskripsi: desc, sr, cp, ba, cr, fe, wk };
         }
 
-        function getRekomendasiSistem(performa) {
-            if(!performa) return [];
-            const srRaw = parseFloat(performa.runs_akhir || performa.runs_awal || 0);
-            const sr = (srRaw / 30) * 100;
-            const ak = getKalkulasi(performa.akurat_akhir, performa.akurat_awal, 24);
-            const tk = getKalkulasi(performa.tangkap_akhir, performa.tangkap_awal, 20);
-            const hd = getKalkulasi(performa.hadang_akhir, performa.hadang_awal, 15);
-            const gv = getKalkulasi(performa.glove_akhir, performa.glove_awal, 20);
-            const rc = getKalkulasi(performa.reaction_akhir, performa.reaction_awal, 15);
-            const st = getKalkulasi(performa.stumping_akhir, performa.stumping_awal, 10);
+        // --- ALGORITMA REKOMENDASI TAKTIS (Placement Engine) ---
+        function getRekomendasiSistem(performa, dom) {
+            if(!performa || !dom) return { list: [], alert: null };
+            
+            const getSafe = (keyA, keyB, keyC) => performa[keyA] || performa[keyB] || performa[keyC];
+            const vo2Akhir = getSafe('vo2_akhir', 'vo2akhir', null); const vo2Awal = getSafe('vo2_awal', 'vo2awal', 'vo2');
+            const run2Akhir = getSafe('runtwo_akhir', 'runtwoakhir', null); const run2Awal = getSafe('runtwo_awal', 'runtwoawal', null);
+
+            const vo2 = getLatest(vo2Akhir, vo2Awal);
+            const run2 = getLatest(run2Akhir, run2Awal);
+
             let hasil = [];
+            let isBatsman = (dom.nama === "Batsman" || dom.nama === "All-Rounder" || dom.nama === "Wicket-Keeper Batsman");
+            let isBowler = (dom.nama === "Bowler" || dom.nama === "All-Rounder");
 
-            if (sr > 0) {
-                let recBat = '';
-                let katBat = sr >= 140 ? 'Sangat Bagus' : (sr >= 110 ? (sr < 140 && sr >= 120 ? 'Bagus' : 'Bagus/Fair') : (sr >= 80 ? 'Cukup' : 'Kurang'));
-                if (sr >= 140) recBat = 'Nomor 5, 6 & 7 (Finisher) - Power Hitter.';
-                else if (sr >= 120 && sr < 140) recBat = 'Nomor 3 & 4 (Top Order) - Stabil menjaga skor.';
-                else if (sr >= 110 && sr <= 130 && tk >= 75 && hd >= 75) recBat = 'Nomor 1 & 2 (Opening) - Catching/Stop juga baik.';
-                else recBat = 'Nomor 8 – 11 (Tailenders).';
-                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Strike Rate:</span> ${sr.toFixed(1)} (${katBat}) <span class="mx-1 text-slate-400">➔</span> <span class="font-medium text-blue-700">${recBat}</span></li>`);
+            // A. Batting Order
+            if (isBatsman && dom.cp >= 85 && (dom.sr >= 110 && dom.sr <= 130) && run2 <= 6.39 && run2 > 0) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Batting:</span> <span class="font-medium text-blue-700">Nomor 1 & 2 (Opening Batsmen)</span> <br><span class="text-[10px] text-slate-500">Mampu mencuri run cepat (Run2 \\le 6.39s) & kontrol \\ge 85%.</span></li>`);
+            } else if (dom.nama === "Batsman" && dom.cp >= 85 && dom.sr >= 120 && vo2 >= 52.0) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Batting:</span> <span class="font-medium text-blue-700">Nomor 3 & 4 (Top Order / Jantung Tim)</span> <br><span class="text-[10px] text-slate-500">VO2 Max \\ge 52.0 mendukung long innings.</span></li>`);
+            } else if (isBatsman && dom.sr >= 140) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Batting:</span> <span class="font-medium text-blue-700">Nomor 5, 6 & 7 (Middle Order / Finisher)</span> <br><span class="text-[10px] text-slate-500">SR Tinggi (\\ge 140) untuk power hitting menit akhir.</span></li>`);
+            } else if (dom.nama === "Bowler" && dom.cp < 60) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Batting:</span> <span class="font-medium text-blue-700">Nomor 8 - 11 (Tailenders)</span></li>`);
+            } else if (dom.cp > 0) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Batting:</span> <span class="font-medium text-blue-700">Rotasi Middle/Lower Order</span></li>`);
             }
 
-            if (ak > 0) {
-                let recBowl = '';
-                let katBowl = ak >= 75 ? 'Sangat Bagus' : (ak >= 60 ? 'Bagus' : (ak >= 45 ? 'Cukup' : 'Kurang'));
-                if (ak >= 75) recBowl = 'Pelempar 1 & 2 (Opening) ATAU Pelempar 5 & 6 (Death overs).';
-                else if (ak >= 60 && ak < 75) recBowl = 'Pelempar 3 & 4 (First Change).';
-                else recBowl = 'Tidak disarankan menjadi Bowler Utama.';
-                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Akurasi Bowling:</span> ${ak.toFixed(1)}% (${katBowl}) <span class="mx-1 text-slate-400">➔</span> <span class="font-medium text-blue-700">${recBowl}</span></li>`);
+            // B. Bowling Order
+            if (isBowler && dom.ba >= 75 && vo2 >= 58.0) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Bowling:</span> <span class="font-medium text-blue-700">Opening Bowler (Over 1 - 5)</span> <br><span class="text-[10px] text-slate-500">Akurasi \\ge 75% didukung Elite VO2 Max (\\ge 58.0).</span></li>`);
+                if (dom.fe >= 75) {
+                    hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Bowling:</span> <span class="font-medium text-blue-700">Death Bowler (Over 16 - 20)</span> <br><span class="text-[10px] text-slate-500">Fielding \\ge 75% + Elite VO2 Max untuk ketenangan akhir.</span></li>`);
+                }
+            } else if (dom.nama === "Bowler" && dom.ba >= 60 && dom.ba < 75) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Bowling:</span> <span class="font-medium text-blue-700">Middle Overs Bowler (Over 6 - 15)</span></li>`);
             }
 
-            if (gv > 0 || rc > 0 || st > 0) {
-                let recWk = '';
-                if (gv >= 90 && rc >= 85 && st >= 80) recWk = 'Sangat Bagus ➔ WK Utama.';
-                else if (gv >= 75 && rc >= 70 && st >= 65) recWk = 'Bagus ➔ WK Cadangan.';
-                else if (gv >= 60 && rc >= 55 && st >= 50) recWk = 'Cukup ➔ Butuh perbaikan refleks.';
-                else recWk = 'Kurang ➔ Belum siap.';
-                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Wicket Keeping:</span> Col (${gv.toFixed(0)}%), React (${rc.toFixed(0)}%), Stump (${st.toFixed(0)}%) <span class="mx-1 text-slate-400">➔</span> <span class="font-medium text-blue-700">${recWk}</span></li>`);
+            // C. Fielding Placement
+            if (dom.wk >= 85) {
+                hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Fielding:</span> <span class="font-medium text-blue-700">Wicket Keeper Utama</span></li>`);
+            } else {
+                if (dom.cr >= 86) hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Fielding:</span> <span class="font-medium text-blue-700">Slip Cordon (Dekat Pemukul)</span></li>`);
+                if (dom.fe >= 86) hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Fielding:</span> <span class="font-medium text-blue-700">Inner Ring (Infield: Cover/Point)</span></li>`);
+                if (dom.fe >= 75 && dom.fe < 86 && vo2 >= 52.0 && run2 <= 6.39 && run2 > 0) {
+                    hasil.push(`<li class="mb-1"><span class="font-semibold text-slate-700">Fielding:</span> <span class="font-medium text-blue-700">Outfield (Deep Boundary)</span> <br><span class="text-[10px] text-slate-500">Fisik memadai untuk pengejaran bola jarak jauh.</span></li>`);
+                }
             }
-            return hasil;
+
+            // Deteksi "Kondisi Kritis Pemain" (Alerta Otomatis)
+            let alertMsg = null;
+            if ((dom.cp >= 75 || dom.ba >= 60) && (vo2 < 46.0 || (run2 > 6.70 && run2 > 0))) {
+                alertMsg = "⚠️ Aset Berbakat - Butuh Gemblengan Fisik Ekstra sebelum Turnamen (Teknik terhambat limitasi Paru-paru/Akselerasi).";
+            }
+
+            return { list: hasil, alert: alertMsg };
         }
 
+        // --- SISTEM MODAL PROFIL (PERBAIKAN FOTO TAMPIL) ---
         function bukaProfil(id) {
             atletAktifId = id; 
             const atlet = dbAtlet.find(a => a.id === id);
@@ -1150,51 +1247,53 @@
             const imgEl = document.getElementById('modal-foto');
             const noImgEl = document.getElementById('modal-no-foto');
             
+            // Bersihkan sisa tampilan sebelumnya
             imgEl.classList.add('hidden');
-            imgEl.onload = null;
-            imgEl.onerror = null;
-            imgEl.src = ''; 
+            imgEl.onload = null; imgEl.onerror = null; imgEl.src = ''; 
             
             noImgEl.classList.remove('hidden');
             noImgEl.innerText = "Memuat foto...";
 
-            const urlFotoBersih = dapatkanUrlFotoValid(atlet.foto);
+            // Menangkap foto dari berbagai kemungkinan nama kolom header di Spreadsheet
+            const urlFotoBersih = dapatkanUrlFotoValid(atlet.foto || atlet.Foto || atlet.FOTO || atlet.url_foto);
 
-            if (urlFotoBersih && urlFotoBersih.length > 20) { 
-                imgEl.onload = function() {
-                    imgEl.classList.remove('hidden');
-                    noImgEl.classList.add('hidden');
-                };
+            // Logika render foto yang sangat agresif agar tidak nge-bug di hidden
+            if (urlFotoBersih && urlFotoBersih.length > 10) { 
+                imgEl.src = urlFotoBersih;
+                imgEl.classList.remove('hidden'); 
+                noImgEl.classList.add('hidden');
+                
                 imgEl.onerror = function() {
-                    imgEl.classList.add('hidden');
+                    imgEl.classList.add('hidden'); 
                     noImgEl.classList.remove('hidden');
-                    noImgEl.innerText = "Foto tidak dapat diakses";
-                    imgEl.src = ''; 
+                    noImgEl.innerText = "Gagal memuat foto dari GDrive"; 
                 };
-                try {
-                    imgEl.src = urlFotoBersih;
-                } catch (err) {
-                    imgEl.onerror();
-                }
             } else {
-                imgEl.classList.add('hidden');
+                imgEl.classList.add('hidden'); 
                 noImgEl.classList.remove('hidden');
-                noImgEl.innerText = "Tidak ada foto";
+                noImgEl.innerText = "Tidak ada foto tersimpan";
             }
 
             const perfContainer = document.getElementById('modal-performa-container');
             const autoRekContainer = document.getElementById('modal-auto-rekomendasi');
 
             if(performa) {
-                const c = (val, max) => val ? ((parseFloat(val)/max)*100).toFixed(1)+'%' : '-';
-                const s = (val) => val ? 'SR '+((parseFloat(val)/30)*100).toFixed(1) : '-';
+                const domObj = getDominasi(performa);
+                const rekomData = getRekomendasiSistem(performa, domObj);
+                
+                const getSafe = (keyA, keyB, keyC) => performa[keyA] || performa[keyB] || performa[keyC] || '-';
+                
+                const c24 = (val) => (val !== '-') ? ((parseFloat(val)/24)*100).toFixed(1)+'%' : '-';
+                const c20 = (val) => (val !== '-') ? ((parseFloat(val)/20)*100).toFixed(1)+'%' : '-';
+                const cwk = (c, s) => (c !== '-' || s !== '-') ? ((((parseFloat(c)||0) + (parseFloat(s)||0))/20)*100).toFixed(1)+'%' : '-';
+                const srF = (val) => (val !== '-') ? 'SR '+((parseFloat(val)/24)*100).toFixed(1) : '-';
 
                 perfContainer.innerHTML = `
                     <div class="overflow-x-auto rounded-xl border border-slate-200">
                         <table class="w-full text-left text-xs sm:text-sm border-collapse bg-white">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200">
-                                    <th class="p-3 font-semibold text-slate-600">Parameter Evaluasi</th>
+                                    <th class="p-3 font-semibold text-slate-600">Parameter ICC Evaluasi</th>
                                     <th class="p-3 text-center font-semibold text-slate-600 border-l border-slate-200">Pre-Season</th>
                                     <th class="p-3 text-center font-semibold text-brand-600 border-l border-slate-200 bg-brand-50/50">Post-Season</th>
                                 </tr>
@@ -1202,53 +1301,48 @@
                             <tbody class="text-slate-700">
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
                                     <td class="p-3">Tanggal Tes</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${performa.tgltes_awal || '-'}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${performa.tgltes_akhir || '-'}</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${getSafe('tgltes_awal', 'tgltesawal', 'tglTes')}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${getSafe('tgltes_akhir', 'tgltesakhir')}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Daya Tahan (VO2 Max)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${performa.vo2_awal || '-'}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${performa.vo2_akhir || '-'}</td>
+                                    <td class="p-3">VO2 Max (Kapasitas Paru)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${getSafe('vo2_awal', 'vo2awal', 'vo2')}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${getSafe('vo2_akhir', 'vo2akhir')}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Lari Cepat 30m (Detik)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${performa.sprint_awal || '-'}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${performa.sprint_akhir || '-'}</td>
+                                    <td class="p-3">Run Two Time (Detik)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${getSafe('runtwo_awal', 'runtwoawal')}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${getSafe('runtwo_akhir', 'runtwoakhir')}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Akurasi Bowling (%)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c(performa.akurat_awal, 24)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c(performa.akurat_akhir, 24)}</td>
+                                    <td class="p-3">Batting: Strike Rate (/24)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${srF(getSafe('runs_awal', 'runsawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${srF(getSafe('runs_akhir', 'runsakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Strike Rate (SR)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${s(performa.runs_awal)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${s(performa.runs_akhir)}</td>
+                                    <td class="p-3">Batting: Control Pct (/24)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c24(getSafe('control_awal', 'controlawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c24(getSafe('control_akhir', 'controlakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Catching Rate (%)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c(performa.tangkap_awal, 20)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c(performa.tangkap_akhir, 20)}</td>
+                                    <td class="p-3">Bowling: Accuracy (/24)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c24(getSafe('akurat_awal', 'akuratawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c24(getSafe('akurat_akhir', 'akuratakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Fielding Efficiency (%)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c(performa.hadang_awal, 15)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c(performa.hadang_akhir, 15)}</td>
+                                    <td class="p-3">Catching Rate (/20)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c20(getSafe('tangkap_awal', 'tangkapawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c20(getSafe('tangkap_akhir', 'tangkapakhir'))}</td>
                                 </tr>
                                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Glovework & Collection (%)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c(performa.glove_awal, 20)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c(performa.glove_akhir, 20)}</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                    <td class="p-3">Reaction to Edges (%)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c(performa.reaction_awal, 15)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c(performa.reaction_akhir, 15)}</td>
+                                    <td class="p-3">Fielding Efficiency (/20)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${c20(getSafe('hadang_awal', 'hadangawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c20(getSafe('hadang_akhir', 'hadangakhir'))}</td>
                                 </tr>
                                 <tr class="hover:bg-slate-50">
-                                    <td class="p-3">Stumping Speed Drill (%)</td>
-                                    <td class="p-3 text-center border-l border-slate-100">${c(performa.stumping_awal, 10)}</td>
-                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${c(performa.stumping_akhir, 10)}</td>
+                                    <td class="p-3">Wicket Keeping (/20)</td>
+                                    <td class="p-3 text-center border-l border-slate-100">${cwk(getSafe('wk_col_awal', 'wkcolawal'), getSafe('wk_stump_awal', 'wkstumpawal'))}</td>
+                                    <td class="p-3 text-center font-bold text-brand-700 border-l border-slate-100 bg-brand-50/30">${cwk(getSafe('wk_col_akhir', 'wkcolakhir'), getSafe('wk_stump_akhir', 'wkstumpakhir'))}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1257,37 +1351,43 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
                         <div class="bg-slate-50 p-4 border border-slate-200 rounded-xl">
                             <span class="text-slate-500 font-bold text-xs uppercase tracking-wider block mb-1.5">Catatan Litbang (Awal)</span>
-                            <p class="text-sm text-slate-700 italic m-0">${performa.catatan_awal || '-'}</p>
+                            <p class="text-sm text-slate-700 italic m-0">${getSafe('catatan_awal', 'catatanawal', 'catatan')}</p>
                         </div>
                         <div class="bg-brand-50 p-4 border border-brand-100 rounded-xl">
                             <span class="text-brand-600 font-bold text-xs uppercase tracking-wider block mb-1.5">Catatan Litbang (Akhir)</span>
-                            <p class="text-sm text-brand-800 italic m-0">${performa.catatan_akhir || '-'}</p>
+                            <p class="text-sm text-brand-800 italic m-0">${getSafe('catatan_akhir', 'catatanakhir')}</p>
                         </div>
                     </div>
                 `;
 
-                const rekom = getRekomendasiSistem(performa);
-                const kekuatan = getKekuatanUtama(performa);
                 let rekapAnalisis = '';
-                if (kekuatan) {
+                if (domObj) {
                     rekapAnalisis += `
                         <div class="mb-4 bg-white p-4 rounded-xl border border-blue-200 shadow-sm">
-                            <span class="block text-blue-600 font-bold text-xs uppercase tracking-wider mb-1">🌟 Dominasi Utama: ${kekuatan.bidang}</span>
-                            <p class="text-sm text-slate-600 m-0">${kekuatan.deskripsi} (Puncak Metrik: <strong class="text-blue-700">${kekuatan.skor}</strong>)</p>
+                            <span class="block text-blue-600 font-bold text-xs uppercase tracking-wider mb-1">HASIL ENGINE: ${domObj.nama.toUpperCase()}</span>
+                            <p class="text-sm text-slate-600 m-0">${domObj.deskripsi}</p>
                         </div>
                     `;
                 }
 
-                if (rekom.length > 0) {
+                if (rekomData.alert) {
                     rekapAnalisis += `
-                        <h5 class="text-blue-800 font-bold text-sm mb-3">⚡ Sistem Auto-Rekomendasi Posisi</h5>
-                        <ul id="list-rekomendasi" class="text-sm list-disc pl-5 space-y-1">
-                            ${rekom.join('')}
+                        <div class="mb-4 bg-red-50 p-4 rounded-xl border border-red-200 shadow-sm">
+                            <p class="text-sm text-red-700 font-bold m-0">${rekomData.alert}</p>
+                        </div>
+                    `;
+                }
+
+                if (rekomData.list.length > 0) {
+                    rekapAnalisis += `
+                        <h5 class="text-blue-800 font-bold text-sm mb-3">⚡ Sistem Rekomendasi Taktis (Placement)</h5>
+                        <ul id="list-rekomendasi" class="text-sm list-disc pl-5 space-y-2">
+                            ${rekomData.list.join('')}
                         </ul>
                     `;
                 }
 
-                if (rekom.length > 0 || kekuatan) {
+                if (rekomData.list.length > 0 || domObj || rekomData.alert) {
                     autoRekContainer.innerHTML = rekapAnalisis;
                     autoRekContainer.classList.remove('hidden');
                 } else {
@@ -1318,7 +1418,30 @@
             }
         }
         
-        // --- OPTIMASI GAMBAR VIA SINKRONISASI ---
+        // PERBAIKAN 3: Logika penggabungan data berbasis timestamp (Anti-Overwrite/Konflik)
+        function mergeDataLocalAndCloud(localArr, cloudArr, idProperty) {
+            if (!cloudArr || !Array.isArray(cloudArr)) return localArr;
+            let merged = [...localArr];
+            
+            cloudArr.forEach(cloudItem => {
+                const localIdx = merged.findIndex(item => item[idProperty] === cloudItem[idProperty]);
+                if (localIdx === -1) {
+                    // Data baru dari cloud, langsung tambahkan
+                    merged.push(cloudItem);
+                } else {
+                    // Cek Timestamp (last_updated) jika ada konflik/update
+                    const localTime = parseInt(merged[localIdx].last_updated) || 0;
+                    const cloudTime = parseInt(cloudItem.last_updated) || 0;
+                    
+                    // Timpa data lokal hanya jika data dari Cloud lebih baru atau sama
+                    if (cloudTime >= localTime) {
+                        merged[localIdx] = cloudItem;
+                    }
+                }
+            });
+            return merged;
+        }
+
         function tarikDataDariCloud() {
             if (!GOOGLE_SHEETS_URL || !GOOGLE_SHEETS_URL.includes("script.google.com")) {
                 alert("URL Spreadsheet belum diatur dengan benar.");
@@ -1334,10 +1457,23 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "sukses") {
-                        // Data dari Cloud berisi link URL langsung ke Google Drive (bukan Base64)
-                        // Hal ini sangat menghemat limit size LocalStorage ponsel/browser
-                        dbAtlet = data.atlet || [];
-                        dbPerforma = data.performa || [];
+                        // Implementasi Merge Anti-Konflik untuk Data Atlet
+                        dbAtlet = mergeDataLocalAndCloud(dbAtlet, data.atlet, 'id');
+                        
+                        // Menyatukan Performa Awal & Akhir dari Sheets untuk Data Lokal UI
+                        let combinedPerformaFromCloud = [];
+                        const perfAwal = data.performaAwal || [];
+                        const perfAkhir = data.performaAkhir || [];
+
+                        const allPerfIds = new Set([...perfAwal.map(p=>p.idAtlet), ...perfAkhir.map(p=>p.idAtlet)]);
+                        allPerfIds.forEach(id => {
+                            if (!id) return;
+                            let aw = perfAwal.find(p => p.idAtlet === id) || {};
+                            let ak = perfAkhir.find(p => p.idAtlet === id) || {};
+                            combinedPerformaFromCloud.push({ ...aw, ...ak, idAtlet: id });
+                        });
+
+                        dbPerforma = mergeDataLocalAndCloud(dbPerforma, combinedPerformaFromCloud, 'idAtlet');
                         
                         localStorage.setItem('kriket_atlet_dki_v2', JSON.stringify(dbAtlet));
                         localStorage.setItem('kriket_performa_dki_v2', JSON.stringify(dbPerforma));
@@ -1345,7 +1481,7 @@
                         renderBukuBesar();
                         muatDaftarAtlet();
                         cekSinkronisasi(); 
-                        showToast('Sinkronisasi Sukses', `Tarik ${dbAtlet.length} Atlet dan ${dbPerforma.length} Data Performa dari Cloud.`);
+                        showToast('Sinkronisasi Sukses', `Update selesai. Data diselesaikan berdasarkan waktu simpan terakhir.`);
                     } else {
                         showToast('Gagal Tarik Data', 'Gagal memproses respons dari server.', true);
                     }
@@ -1360,58 +1496,76 @@
                 });
         }
 
+        // --- SISTEM PEMBUATAN PDF (Update Rubrik ICC) ---
         function getTemplatePdf(atlet, performa, tipe = 'lengkap') {
-            const thnAwal = performa.tgltes_awal ? new Date(performa.tgltes_awal).getFullYear() : '-';
-            const thnAkhir = performa.tgltes_akhir ? new Date(performa.tgltes_akhir).getFullYear() : '-';
+            const getSafe = (keyA, keyB, keyC) => performa[keyA] || performa[keyB] || performa[keyC];
+            
+            const rawTglAwal = getSafe('tgltes_awal', 'tgltesawal', 'tglTes');
+            const rawTglAkhir = getSafe('tgltes_akhir', 'tgltesakhir');
+            
+            const thnAwal = rawTglAwal ? new Date(rawTglAwal).getFullYear() : '-';
+            const thnAkhir = rawTglAkhir ? new Date(rawTglAkhir).getFullYear() : '-';
             const tahunTampil = thnAkhir !== '-' ? thnAkhir : thnAwal;
 
-            const rekom = getRekomendasiSistem(performa);
-            const kekuatan = getKekuatanUtama(performa);
+            const domObj = getDominasi(performa);
+            const rekomData = getRekomendasiSistem(performa, domObj);
             
             let rekomHtml = '';
-            if (kekuatan || rekom.length > 0) {
-                let kekuatanHtml = kekuatan ? `
-                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; page-break-inside: avoid;">
-                        <h4 style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0f172a; margin: 0 0 4px 0; font-size: 12px; font-weight: bold; text-transform: uppercase;">🌟 Dominasi Utama Atlet</h4>
-                        <p style="font-size: 11px; margin: 0; line-height: 1.5; color: #475569;">${kekuatan.deskripsi} (Skor tertinggi: <strong style="color: #0f172a;">${kekuatan.skor}</strong>)</p>
+            if (domObj || rekomData.list.length > 0 || rekomData.alert) {
+                let alertHtml = rekomData.alert ? `
+                    <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; page-break-inside: avoid;">
+                        <p style="font-size: 11px; margin: 0; line-height: 1.5; color: #b91c1c; font-weight: bold;">${rekomData.alert}</p>
                     </div>` : '';
 
-                let rekomendasiPosisiHtml = rekom.length > 0 ? `
+                let kekuatanHtml = domObj ? `
+                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; page-break-inside: avoid;">
+                        <h4 style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0f172a; margin: 0 0 4px 0; font-size: 12px; font-weight: bold; text-transform: uppercase;">HASIL ENGINE: ${domObj.nama.toUpperCase()}</h4>
+                        <p style="font-size: 11px; margin: 0; line-height: 1.5; color: #475569;">${domObj.deskripsi}</p>
+                    </div>` : '';
+
+                let rekomendasiPosisiHtml = rekomData.list.length > 0 ? `
                     <div style="page-break-inside: avoid; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px 12px;">
-                        <h4 style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e3a8a; margin: 0 0 6px 0; font-size: 12px; font-weight: bold; text-transform: uppercase;">⚡ Rekomendasi Posisi (Auto-Generated)</h4>
+                        <h4 style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e3a8a; margin: 0 0 6px 0; font-size: 12px; font-weight: bold; text-transform: uppercase;">⚡ Rekomendasi Taktis (Placement Engine)</h4>
                         <ul style="font-size: 11px; margin: 0; padding-left: 16px; line-height: 1.5; color: #1e40af;">
-                            ${rekom.join('')}
+                            ${rekomData.list.join('')}
                         </ul>
                     </div>` : '';
 
                 rekomHtml = `
                     <div style="margin-top: 15px; page-break-inside: avoid;">
-                        ${kekuatanHtml} ${rekomendasiPosisiHtml}
+                        ${alertHtml} ${kekuatanHtml} ${rekomendasiPosisiHtml}
                     </div>`;
             }
             
-            const c = (val, max) => val ? ((parseFloat(val)/max)*100).toFixed(1)+'%' : '-';
-            const s = (val) => val ? 'SR '+((parseFloat(val)/30)*100).toFixed(1) : '-';
-            const urlFotoPDF = dapatkanUrlFotoValid(atlet.foto);
+            const c24 = (val) => val ? ((parseFloat(val)/24)*100).toFixed(1)+'%' : '-';
+            const c20 = (val) => val ? ((parseFloat(val)/20)*100).toFixed(1)+'%' : '-';
+            const cwk = (c, s) => (c || s) ? ((((parseFloat(c)||0) + (parseFloat(s)||0))/20)*100).toFixed(1)+'%' : '-';
+            const srF = (val) => val ? 'SR '+((parseFloat(val)/24)*100).toFixed(1) : '-';
+            
+            const urlFotoPDF = dapatkanUrlFotoValid(atlet.foto || atlet.Foto || atlet.FOTO || atlet.url_foto);
 
             const rubricHtml = `
-                <div style="margin-top: 20px; page-break-inside: avoid;">
-                    <h3 style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">III. Referensi Standardisasi Rubrik (DKI)</h3>
+                <div style="margin-top: 20px; page-break-inside: auto;">
+                    <h3 style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">III. Referensi Standardisasi Rubrik (ICC Level 2 Threshold)</h3>
                     <table style="width: 100%; border-collapse: collapse; font-size: 9px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                         <thead>
                             <tr style="background-color: #f8fafc;">
-                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; text-align: left; color: #475569;">Metrik Dasar</th>
-                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; color: #475569;">Fair / Cukup</th>
-                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; color: #475569;">Good / Bagus</th>
-                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; color: #475569;">Excellent / Sangat Bagus</th>
+                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; text-align: left; color: #475569;">Variabel Aplikasi</th>
+                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; color: #475569;">Kurang / Poor (1)</th>
+                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; color: #475569;">Cukup / Fair (2)</th>
+                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; color: #475569;">Bagus / Good (3)</th>
+                                <th style="border-bottom: 1px solid #cbd5e1; padding: 6px; color: #475569;">Sangat Bagus / Elite (4)</th>
                             </tr>
                         </thead>
                         <tbody style="color: #64748b;">
-                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">Batting: Strike Rate</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">80.00 – 109.99</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">110.00 – 139.99</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">140.00+</td></tr>
-                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">Bowling: Akurasi</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">45% – 59%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">60% – 74%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">75%+</td></tr>
-                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">Fielding: Catching</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">60% – 74%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">75% – 85%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">86%+</td></tr>
-                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">Fielding: Ground Stops</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">65% – 74%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">75% – 85%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">86%+</td></tr>
-                            <tr><td style="padding: 5px; font-weight: bold;">WK: Global Metrics</td><td style="padding: 5px; text-align: center;">50% – 64%</td><td style="padding: 5px; text-align: center;">65% – 79%</td><td style="padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">80%+</td></tr>
+                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">SR (Strike Rate)</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">< 80.00</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">80.00 – 109.99</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">110.00 – 139.99</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">140.00+</td></tr>
+                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">CP (Control Pct)</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">< 60.00%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">60.00% – 74.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">75.00% – 84.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">85.00%+</td></tr>
+                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">BA (Bowling Acc)</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">< 45.00%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">45.00% – 59.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">60.00% – 74.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">75.00%+</td></tr>
+                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">CR (Catching Rate)</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">< 60.00%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">60.00% – 74.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">75.00% – 85.00%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">86.00%+</td></tr>
+                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">FE (Fielding Eff)</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">< 65.00%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">65.00% – 74.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">75.00% – 85.00%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">86.00%+</td></tr>
+                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold;">WK (Wicket Keep)</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">< 60.00%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">60.00% – 74.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center;">75.00% – 84.99%</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a;">85.00%+</td></tr>
+                            <tr><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; font-weight: bold; background-color: #fff7ed;">Run_Two_Time</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; background-color: #fff7ed;">> 6.70 dtk</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; background-color: #fff7ed;">6.40 – 6.70 dtk</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; background-color: #fff7ed;">6.20 – 6.39 dtk</td><td style="border-bottom: 1px solid #f1f5f9; padding: 5px; text-align: center; font-weight: bold; color: #0f172a; background-color: #fff7ed;">< 6.20 dtk</td></tr>
+                            <tr><td style="padding: 5px; font-weight: bold; background-color: #fff7ed;">VO2_Max</td><td style="padding: 5px; text-align: center; background-color: #fff7ed;">< 46.0</td><td style="padding: 5px; text-align: center; background-color: #fff7ed;">46.0 – 51.9</td><td style="padding: 5px; text-align: center; background-color: #fff7ed;">52.0 – 57.9</td><td style="padding: 5px; text-align: center; font-weight: bold; color: #0f172a; background-color: #fff7ed;">58.0+</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1472,7 +1626,7 @@
                             </div>
                         </div>
 
-                        <h3 style="font-size: 12px; font-weight: bold; text-transform: uppercase; color: #0f172a; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 2px solid #e2e8f0;">I. Komparasi Data Simulasi Fisik & Teknis</h3>
+                        <h3 style="font-size: 12px; font-weight: bold; text-transform: uppercase; color: #0f172a; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 2px solid #e2e8f0;">I. Komparasi Data Simulasi Fisik & Teknis (ICC Level 2)</h3>
                         <table style="width: 100%; border-collapse: separate; border-spacing: 0; font-size: 10px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden;">
                             <thead>
                                 <tr style="background-color: #f8fafc;">
@@ -1484,53 +1638,48 @@
                             <tbody>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; font-weight: 600; color: #64748b;">Tanggal Pengujian</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${performa.tgltes_awal || '-'}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${performa.tgltes_akhir || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${rawTglAwal || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${rawTglAkhir || '-'}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Kapasitas Paru (VO2 Max)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${performa.vo2_awal || '-'}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${performa.vo2_akhir || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${getSafe('vo2_awal', 'vo2awal', 'vo2') || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${getSafe('vo2_akhir', 'vo2akhir') || '-'}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Lari Cepat 30m (Detik)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${performa.sprint_awal || '-'}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${performa.sprint_akhir || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Run Two Time (Detik)</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${getSafe('runtwo_awal', 'runtwoawal') || '-'}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${getSafe('runtwo_akhir', 'runtwoakhir') || '-'}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Akurasi Bowling (%)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c(performa.akurat_awal, 24)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c(performa.akurat_akhir, 24)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Batting: Strike Rate (/24)</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${srF(getSafe('runs_awal', 'runsawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${srF(getSafe('runs_akhir', 'runsakhir'))}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Batting Strike Rate</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${s(performa.runs_awal)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${s(performa.runs_akhir)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Batting: Control Pct (/24)</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c24(getSafe('control_awal', 'controlawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c24(getSafe('control_akhir', 'controlakhir'))}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Catching Rate (%)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c(performa.tangkap_awal, 20)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c(performa.tangkap_akhir, 20)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Bowling: Accuracy (/24)</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c24(getSafe('akurat_awal', 'akuratawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c24(getSafe('akurat_akhir', 'akuratakhir'))}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Fielding / Stops (%)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c(performa.hadang_awal, 15)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c(performa.hadang_akhir, 15)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Catching Rate (/20)</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c20(getSafe('tangkap_awal', 'tangkapawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c20(getSafe('tangkap_akhir', 'tangkapakhir'))}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; color: #64748b;">WK: Glovework (%)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c(performa.glove_awal, 20)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c(performa.glove_akhir, 20)}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0;">Fielding Efficiency (/20)</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c20(getSafe('hadang_awal', 'hadangawal'))}</td>
+                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c20(getSafe('hadang_akhir', 'hadangakhir'))}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; color: #64748b;">WK: Reaction (%)</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; border-right: 1px solid #e2e8f0; text-align: center;">${c(performa.reaction_awal, 15)}</td>
-                                    <td style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; font-weight: bold;">${c(performa.reaction_akhir, 15)}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 6px 10px; border-right: 1px solid #e2e8f0; color: #64748b;">WK: Stumping (%)</td>
-                                    <td style="padding: 6px 10px; border-right: 1px solid #e2e8f0; text-align: center;">${c(performa.stumping_awal, 10)}</td>
-                                    <td style="padding: 6px 10px; text-align: center; font-weight: bold;">${c(performa.stumping_akhir, 10)}</td>
+                                    <td style="padding: 6px 10px; border-right: 1px solid #e2e8f0; color: #64748b;">WK: Total Pct (/20)</td>
+                                    <td style="padding: 6px 10px; border-right: 1px solid #e2e8f0; text-align: center;">${cwk(getSafe('wk_col_awal', 'wkcolawal'), getSafe('wk_stump_awal', 'wkstumpawal'))}</td>
+                                    <td style="padding: 6px 10px; text-align: center; font-weight: bold;">${cwk(getSafe('wk_col_akhir', 'wkcolakhir'), getSafe('wk_stump_akhir', 'wkstumpakhir'))}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1539,11 +1688,11 @@
                         <div style="display: flex; gap: 15px; margin-bottom: 15px;">
                             <div style="width: 50%; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; page-break-inside: avoid;">
                                 <strong style="color: #475569; display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase;">Evaluasi Awal:</strong>
-                                <span style="font-style: italic; font-size: 11px; color: #334155;">${performa.catatan_awal || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
+                                <span style="font-style: italic; font-size: 11px; color: #334155;">${getSafe('catatan_awal', 'catatanawal', 'catatan') || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
                             </div>
                             <div style="width: 50%; background-color: #fff7ed; border: 1px solid #ffedd5; border-radius: 6px; padding: 12px; page-break-inside: avoid;">
                                 <strong style="color: #ea580c; display: block; margin-bottom: 6px; font-size: 10px; text-transform: uppercase;">Evaluasi Akhir (Kemajuan):</strong>
-                                <span style="font-style: italic; font-size: 11px; color: #334155;">${performa.catatan_akhir || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
+                                <span style="font-style: italic; font-size: 11px; color: #334155;">${getSafe('catatan_akhir', 'catatanakhir') || 'Tidak ada catatan subjektif yang dilampirkan.'}</span>
                             </div>
                         </div>
 
@@ -1596,8 +1745,9 @@
             const atletTerfilter = dbAtlet.filter(atlet => {
                 const p = dbPerforma.find(x => x.idAtlet === atlet.id);
                 if (!p) return false;
-                const adaAwal = !!p.tgltes_awal; const adaAkhir = !!p.tgltes_akhir;
-                return tipe === 'awal_saja' ? (adaAwal && !adaAkhir) : (adaAwal && adaAkhir);
+                const isAwal = p.tgltes_awal || p.tgltesawal || p.tglTes;
+                const isAkhir = p.tgltes_akhir || p.tgltesakhir;
+                return tipe === 'awal_saja' ? (isAwal && !isAkhir) : (isAwal && isAkhir);
             });
 
             if (atletTerfilter.length === 0) {
